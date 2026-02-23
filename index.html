@@ -1,0 +1,2549 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setting Up Your Project For Success — cmd-f 2026</title>
+  <style>
+    :root {
+      --bg-deep: #d6ecfb;
+      --bg-mid: #c6e6fa;
+      --bg-electric: #bce0f5;
+      --purple: #8f6de8;
+      --coral: #ef4f7f;
+      --mint: #65d8a4;
+      --gold: #f3b65f;
+      --aqua: #67d2de;
+      --lavender: #ab83f0;
+      --forest: #56b97d;
+      --royal: #2a49ac;
+      --berry: #d33a6a;
+      --cream: #fff5df;
+      --glass-bg: rgba(255, 255, 255, 0.74);
+      --glass-border: rgba(255, 255, 255, 0.88);
+      --glass-shadow: 0 22px 52px rgba(40, 73, 141, 0.18);
+      --text-main: #142954;
+      --text-soft: rgba(32, 49, 89, 0.87);
+      --text-mute: rgba(49, 76, 130, 0.72);
+      --heading: clamp(48px, 6vw, 80px);
+      --subheading: clamp(28px, 3.2vw, 44px);
+      --body: clamp(18px, 1.7vw, 22px);
+      --label: 13px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(180deg, #c9e8fb 0%, #baddf5 52%, #d8efc2 100%);
+      color: var(--text-main);
+      font-family: "Avenir Next", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.01em;
+    }
+
+    ::selection {
+      background: rgba(108, 99, 255, 0.28);
+      color: #0e1830;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 20%, rgba(255, 255, 255, 0.4), transparent 34%),
+        radial-gradient(circle at 86% 24%, rgba(255, 255, 255, 0.28), transparent 36%),
+        radial-gradient(circle at 55% 8%, rgba(255, 255, 255, 0.26), transparent 30%);
+      opacity: 0.55;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .storybook-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .storybook-layer .canopy {
+      position: absolute;
+      top: -120px;
+      left: -8%;
+      width: 116%;
+      height: 300px;
+      background:
+        radial-gradient(circle at 8% 78%, #72ca71 0 115px, transparent 118px),
+        radial-gradient(circle at 21% 73%, #7ad37c 0 128px, transparent 131px),
+        radial-gradient(circle at 37% 79%, #69c66c 0 118px, transparent 121px),
+        radial-gradient(circle at 54% 74%, #78d178 0 132px, transparent 135px),
+        radial-gradient(circle at 69% 78%, #67be68 0 112px, transparent 115px),
+        radial-gradient(circle at 84% 72%, #74cc72 0 124px, transparent 128px),
+        radial-gradient(circle at 97% 78%, #69c567 0 116px, transparent 119px);
+      opacity: 0.88;
+      filter: drop-shadow(0 6px 0 rgba(44, 84, 168, 0.1));
+    }
+
+    .storybook-layer .hills {
+      position: absolute;
+      left: -8%;
+      right: -8%;
+      bottom: -120px;
+      height: 340px;
+      background:
+        radial-gradient(ellipse at 15% 100%, rgba(130, 208, 120, 0.9) 0 42%, transparent 43%),
+        radial-gradient(ellipse at 42% 100%, rgba(115, 196, 118, 0.88) 0 40%, transparent 41%),
+        radial-gradient(ellipse at 71% 100%, rgba(104, 189, 120, 0.86) 0 43%, transparent 44%),
+        radial-gradient(ellipse at 92% 100%, rgba(133, 210, 128, 0.84) 0 38%, transparent 39%);
+      opacity: 0.78;
+    }
+
+    .storybook-layer .river {
+      position: absolute;
+      left: -6%;
+      right: -6%;
+      bottom: -160px;
+      height: 290px;
+      border-radius: 50% 50% 0 0;
+      background: linear-gradient(180deg, rgba(46, 74, 177, 0.08), rgba(35, 61, 156, 0.82));
+    }
+
+    .storybook-layer .tree-left,
+    .storybook-layer .tree-right {
+      position: absolute;
+      top: 64px;
+      width: 90px;
+      bottom: -20px;
+      border-radius: 40px;
+      background:
+        linear-gradient(180deg, rgba(39, 83, 197, 0.95), rgba(28, 52, 150, 0.92));
+      opacity: 0.65;
+    }
+
+    .storybook-layer .tree-left {
+      left: -28px;
+      transform: rotate(1.2deg);
+    }
+
+    .storybook-layer .tree-right {
+      right: -34px;
+      transform: rotate(-1.6deg);
+    }
+
+    .aurora-layer {
+      position: fixed;
+      inset: -20%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 18%, rgba(255, 255, 255, 0.28), transparent 40%),
+        radial-gradient(ellipse at 72% 26%, rgba(255, 255, 255, 0.24), transparent 38%),
+        radial-gradient(ellipse at 52% 8%, rgba(255, 255, 255, 0.22), transparent 32%);
+      filter: blur(28px);
+      animation: auroraShift 15s ease-in-out infinite alternate;
+      opacity: 0.92;
+    }
+
+    .spotlight {
+      position: fixed;
+      width: 520px;
+      height: 520px;
+      left: -260px;
+      top: -260px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(circle at center, rgba(255, 248, 221, 0.7) 0%, rgba(255, 255, 255, 0) 62%);
+      mix-blend-mode: screen;
+      opacity: 0.65;
+      transition: transform 120ms linear;
+    }
+
+    .emoji-cloud {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .emoji-cloud span {
+      position: absolute;
+      font-size: clamp(24px, 3vw, 42px);
+      opacity: 0.3;
+      animation: floatEmoji var(--dur) ease-in-out infinite;
+      animation-delay: var(--delay);
+      left: var(--x);
+      top: var(--y);
+      transform: rotate(var(--rot));
+      filter: drop-shadow(0 10px 14px rgba(56, 82, 138, 0.22));
+    }
+
+    .global-orb,
+    .global-orb::before,
+    .global-orb::after {
+      pointer-events: none;
+      position: fixed;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(10px);
+      z-index: 0;
+      content: "";
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    .global-orb {
+      width: 320px;
+      height: 320px;
+      left: -80px;
+      bottom: -70px;
+      background: radial-gradient(circle at 30% 30%, rgba(103, 210, 136, 0.48), rgba(42, 73, 172, 0.08));
+    }
+
+    .global-orb::before {
+      width: 240px;
+      height: 240px;
+      right: -980px;
+      top: -710px;
+      background: radial-gradient(circle at 70% 30%, rgba(239, 79, 127, 0.38), rgba(245, 182, 95, 0.12));
+      animation-duration: 22s;
+    }
+
+    .global-orb::after {
+      width: 280px;
+      height: 280px;
+      left: 1020px;
+      bottom: 720px;
+      background: radial-gradient(circle at 50% 50%, rgba(42, 73, 172, 0.34), rgba(101, 216, 164, 0.12));
+      animation-duration: 20s;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      isolation: isolate;
+      z-index: 2;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      padding: clamp(20px, 3vw, 48px);
+      display: grid;
+      align-items: stretch;
+      opacity: 0;
+      transform: translateX(58px) scale(0.985);
+      filter: blur(4px);
+      pointer-events: none;
+      transition: opacity 520ms ease, transform 620ms cubic-bezier(0.16, 1, 0.3, 1), filter 520ms ease;
+      background: radial-gradient(circle at 9% 11%, rgba(101, 216, 164, 0.18), transparent 40%),
+                  radial-gradient(circle at 88% 14%, rgba(239, 79, 127, 0.14), transparent 40%),
+                  linear-gradient(180deg, rgba(220, 241, 252, 0.8), rgba(229, 245, 255, 0.72) 62%, rgba(227, 244, 214, 0.72));
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 10% 12%;
+      border-radius: 40px;
+      border: 1px solid rgba(110, 137, 179, 0.22);
+      pointer-events: none;
+      display: none;
+    }
+
+    .slide::after {
+      content: attr(data-emoji);
+      position: absolute;
+      right: clamp(14px, 4vw, 46px);
+      top: clamp(10px, 2vh, 30px);
+      font-size: clamp(42px, 7vw, 92px);
+      opacity: 0.2;
+      filter: drop-shadow(0 10px 12px rgba(87, 116, 171, 0.16));
+      transform: rotate(-8deg);
+      pointer-events: none;
+      z-index: 1;
+      display: none;
+    }
+
+    .slide:nth-child(5n + 1) {
+      background: radial-gradient(circle at 14% 14%, rgba(101, 216, 164, 0.22), transparent 39%),
+                  radial-gradient(circle at 86% 12%, rgba(171, 131, 240, 0.18), transparent 38%),
+                  linear-gradient(180deg, #d4ecfb 0%, #c8e4f7 58%, #d8efc6 100%);
+    }
+
+    .slide:nth-child(5n + 2) {
+      background: radial-gradient(circle at 84% 16%, rgba(239, 79, 127, 0.2), transparent 38%),
+                  radial-gradient(circle at 14% 82%, rgba(243, 182, 95, 0.15), transparent 42%),
+                  linear-gradient(180deg, #d3eafd 0%, #c2dff5 57%, #d9f1c8 100%);
+    }
+
+    .slide:nth-child(5n + 3) {
+      background: radial-gradient(circle at 16% 14%, rgba(101, 216, 164, 0.22), transparent 42%),
+                  radial-gradient(circle at 86% 80%, rgba(103, 210, 222, 0.16), transparent 42%),
+                  linear-gradient(180deg, #d6edf9 0%, #c8e3f6 56%, #dcf2ca 100%);
+    }
+
+    .slide:nth-child(5n + 4) {
+      background: radial-gradient(circle at 82% 12%, rgba(143, 109, 232, 0.2), transparent 38%),
+                  radial-gradient(circle at 14% 86%, rgba(87, 185, 125, 0.16), transparent 43%),
+                  linear-gradient(180deg, #d3e8fa 0%, #c6e3f8 56%, #d6f0c1 100%);
+    }
+
+    .slide:nth-child(5n + 5) {
+      background: radial-gradient(circle at 80% 16%, rgba(243, 182, 95, 0.22), transparent 36%),
+                  radial-gradient(circle at 14% 83%, rgba(101, 216, 164, 0.18), transparent 42%),
+                  linear-gradient(180deg, #d5ebfb 0%, #c7e2f4 56%, #d9efc6 100%);
+    }
+
+    .slide.is-active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      filter: blur(0);
+      pointer-events: auto;
+      z-index: 4;
+    }
+
+    .slide.is-before {
+      transform: translateX(-68px) scale(0.975);
+      z-index: 2;
+    }
+
+    .slide.is-after {
+      transform: translateX(68px) scale(0.975);
+      z-index: 1;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      gap: clamp(12px, 2vh, 22px);
+      align-content: center;
+      overflow: auto;
+      animation: riseIn 650ms ease both;
+    }
+
+    .slide .slide-content > * {
+      opacity: 0;
+      transform: translateY(16px) scale(0.985);
+    }
+
+    .slide.is-active .slide-content > * {
+      animation: contentIn 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: calc(var(--stagger, 0) * 80ms);
+    }
+
+    .label {
+      font-size: var(--label);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-mute);
+      font-weight: 700;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.06;
+      font-weight: 780;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+
+    h1 { font-size: var(--heading); }
+    h2 { font-size: var(--subheading); }
+    h3 { font-size: clamp(26px, 2.6vw, 34px); }
+
+    p,
+    li,
+    .body {
+      font-size: var(--body);
+      color: var(--text-soft);
+      line-height: 1.42;
+      text-wrap: pretty;
+    }
+
+    .hero-title {
+      font-size: clamp(56px, 8vw, 86px);
+      max-width: 980px;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(21px, 2.3vw, 32px);
+      color: rgba(27, 53, 96, 0.9);
+      max-width: 700px;
+    }
+
+    .meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 16px;
+      color: var(--text-mute);
+    }
+
+    .glass {
+      position: relative;
+      overflow: hidden;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 26px;
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(239, 79, 127, 0.52), rgba(143, 109, 232, 0.45), rgba(101, 216, 164, 0.52));
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .glass::after {
+      content: "♥";
+      position: absolute;
+      right: 14px;
+      bottom: 10px;
+      font-size: 14px;
+      color: rgba(211, 58, 106, 0.28);
+      transform: translateY(8px);
+      opacity: 0;
+      transition: opacity 220ms ease, transform 220ms ease;
+      pointer-events: none;
+    }
+
+    .glass-soft {
+      background: rgba(255, 248, 235, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: 0 14px 34px rgba(50, 80, 141, 0.16);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 24px;
+    }
+
+    .glass,
+    .glass-soft,
+    .code-block,
+    .decision-card,
+    .stat,
+    .avatar,
+    .doc-shell,
+    .warm-block {
+      transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 260ms ease;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .glass:hover,
+    .glass-soft:hover,
+    .code-block:hover,
+    .decision-card:hover,
+    .stat:hover,
+    .avatar:hover,
+    .doc-shell:hover,
+    .warm-block:hover {
+      box-shadow: 0 20px 46px rgba(58, 83, 131, 0.26);
+    }
+
+    .glass:hover::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .pulse {
+      animation: pulseGlow 2.6s ease-in-out infinite;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(14px, 2vw, 24px);
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(12px, 1.8vw, 22px);
+      align-items: stretch;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(10px, 1.4vw, 16px);
+    }
+
+    .pill {
+      padding: 11px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      font-weight: 760;
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      color: #fff;
+      width: fit-content;
+      box-shadow: 0 12px 24px rgba(62, 82, 151, 0.22);
+    }
+
+    .gradient-purple { background: linear-gradient(120deg, rgba(108, 99, 255, 0.8), rgba(116, 235, 213, 0.55)); }
+    .gradient-coral { background: linear-gradient(120deg, rgba(255, 101, 132, 0.86), rgba(247, 151, 30, 0.62)); }
+    .gradient-mint { background: linear-gradient(120deg, rgba(67, 233, 123, 0.82), rgba(116, 235, 213, 0.55)); }
+    .gradient-gold { background: linear-gradient(120deg, rgba(247, 151, 30, 0.86), rgba(255, 206, 84, 0.62)); }
+    .gradient-aqua { background: linear-gradient(120deg, rgba(116, 235, 213, 0.8), rgba(108, 99, 255, 0.52)); }
+    .gradient-lavender { background: linear-gradient(120deg, rgba(184, 140, 255, 0.84), rgba(108, 99, 255, 0.58)); }
+
+    .slide.activity {
+      background: radial-gradient(circle at 72% 16%, rgba(239, 79, 127, 0.36), transparent 44%),
+                  radial-gradient(circle at 16% 76%, rgba(243, 182, 95, 0.28), transparent 42%),
+                  linear-gradient(178deg, #def2ff, #d0e7f8 52%, #e6f6d1 100%);
+    }
+
+    .slide.activity::before {
+      border-color: rgba(255, 150, 170, 0.4);
+    }
+
+    .slide.activity::after {
+      opacity: 0.34;
+    }
+
+    .accent-line {
+      width: 320px;
+      max-width: 80%;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--coral), var(--lavender), var(--aqua));
+      box-shadow: 0 0 24px rgba(116, 235, 213, 0.42);
+      animation: shimmer 3.2s linear infinite;
+      background-size: 220% 100%;
+    }
+
+    .badge-xl {
+      width: fit-content;
+      padding: 14px 22px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      font-size: clamp(16px, 2vw, 22px);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(120deg, rgba(211, 58, 106, 0.8), rgba(143, 109, 232, 0.72));
+      box-shadow: 0 12px 28px rgba(91, 73, 165, 0.26);
+    }
+
+    .code-block {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: clamp(17px, 1.8vw, 21px);
+      line-height: 1.55;
+      color: #f5fbff;
+      padding: clamp(16px, 2vw, 24px);
+      border-radius: 18px;
+      border: 1px solid rgba(161, 188, 255, 0.34);
+      background: linear-gradient(130deg, rgba(35, 61, 156, 0.88), rgba(64, 89, 190, 0.78));
+      box-shadow: 0 14px 34px rgba(39, 64, 144, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .mini-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      font-size: 21px;
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid rgba(255, 255, 255, 0.86);
+      box-shadow: 0 10px 24px rgba(95, 128, 173, 0.28);
+    }
+
+    .x-glow { box-shadow: 0 12px 30px rgba(255, 101, 132, 0.32); border-color: rgba(255, 101, 132, 0.42); }
+    .check-glow { box-shadow: 0 12px 30px rgba(67, 233, 123, 0.28); border-color: rgba(67, 233, 123, 0.42); }
+
+    .connector {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      color: var(--text-mute);
+    }
+
+    .dot-line {
+      flex: 1;
+      height: 2px;
+      margin: 0 6px;
+      background: repeating-linear-gradient(90deg, rgba(69, 176, 156, 0.85) 0 8px, transparent 8px 16px);
+      opacity: 0.7;
+    }
+
+    .tiny {
+      font-size: 15px;
+      color: var(--text-mute);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .chaos {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: center;
+      justify-items: center;
+      padding: 18px;
+    }
+
+    .chaos span {
+      font-size: clamp(30px, 4vw, 52px);
+      transform: rotate(var(--r));
+      animation: bob 2.8s ease-in-out infinite;
+      animation-delay: var(--d);
+      filter: drop-shadow(0 0 12px rgba(255, 101, 132, 0.38));
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+
+    .timeline .node {
+      padding: 16px;
+      text-align: center;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(13px);
+      -webkit-backdrop-filter: blur(13px);
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .doc-shell {
+      position: relative;
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .doc-shell::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      width: 62px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 101, 132, 0.8), rgba(247, 151, 30, 0.8), rgba(67, 233, 123, 0.8));
+    }
+
+    .doc-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .doc-field {
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.64);
+      background: rgba(255, 255, 255, 0.65);
+      font-size: 17px;
+      color: rgba(22, 40, 74, 0.9);
+    }
+
+    .danger-board {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .danger-column,
+    .decision-card {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.62);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .danger-column {
+      box-shadow: 0 0 28px rgba(255, 101, 132, 0.33);
+      border-color: rgba(255, 101, 132, 0.35);
+      transform: rotate(-1deg);
+    }
+
+    .danger-column:nth-child(2) { transform: rotate(1.5deg); }
+    .danger-column:nth-child(3) { transform: rotate(-1.2deg); }
+
+    .danger-column ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .danger-column li {
+      font-size: 17px;
+      color: rgba(95, 25, 44, 0.92);
+    }
+
+    .warm-block {
+      background: linear-gradient(140deg, rgba(247, 151, 30, 0.24), rgba(255, 101, 132, 0.18));
+      border: 1px solid rgba(255, 188, 140, 0.35);
+      box-shadow: 0 0 32px rgba(247, 151, 30, 0.25);
+      border-radius: 22px;
+      padding: 22px;
+    }
+
+    .countdown-ring {
+      width: 138px;
+      height: 138px;
+      border-radius: 50%;
+      background: conic-gradient(rgba(116, 235, 213, 0.85) 0deg 270deg, rgba(255, 255, 255, 0.12) 270deg);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 26px rgba(116, 235, 213, 0.35);
+      margin: 6px auto 0;
+    }
+
+    .countdown-ring span {
+      width: 102px;
+      height: 102px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      font-size: 26px;
+      font-weight: 760;
+      color: #15425b;
+    }
+
+    .spiral {
+      position: relative;
+      min-height: 210px;
+      border-radius: 22px;
+      overflow: hidden;
+    }
+
+    .spiral::before {
+      content: "";
+      position: absolute;
+      inset: 5% 16%;
+      background: repeating-radial-gradient(circle at center, rgba(255, 101, 132, 0.28) 0 2px, transparent 2px 15px);
+      opacity: 0.9;
+      transform: rotate(12deg);
+    }
+
+    .spiral::after {
+      content: "We just need one more feature...";
+      position: absolute;
+      inset: auto 20px 20px 20px;
+      font-size: clamp(20px, 2.2vw, 30px);
+      color: rgba(111, 31, 58, 0.86);
+      text-align: center;
+      text-shadow: 0 0 18px rgba(255, 101, 132, 0.2);
+    }
+
+    .tier {
+      display: grid;
+      gap: 12px;
+      align-items: center;
+      justify-items: start;
+    }
+
+    .tier .badge {
+      min-width: 340px;
+      max-width: 100%;
+      padding: 16px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      font-size: clamp(20px, 2.1vw, 28px);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 760;
+      box-shadow: 0 0 24px rgba(255, 255, 255, 0.12);
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .matrix ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .matrix li { font-size: 18px; }
+
+    .vote-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .vote-item {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .vote-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .vote-tags span {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid rgba(147, 161, 198, 0.5);
+      color: rgba(35, 47, 82, 0.88);
+    }
+
+    .network {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .avatar {
+      padding: 22px;
+      border-radius: 22px;
+      text-align: center;
+      font-size: 20px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: var(--glass-shadow);
+    }
+
+    .bridge {
+      width: 200px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 101, 132, 0.7), rgba(116, 235, 213, 0.8));
+      position: relative;
+      box-shadow: 0 0 25px rgba(116, 235, 213, 0.32);
+    }
+
+    .bridge::after {
+      content: "SPEC";
+      position: absolute;
+      left: 50%;
+      top: -18px;
+      transform: translateX(-50%);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: rgba(36, 63, 103, 0.95);
+      text-transform: uppercase;
+    }
+
+    .crud {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .crud .card {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.66);
+      color: #fff;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 760;
+      box-shadow: 0 14px 30px rgba(69, 82, 140, 0.24);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .flow .step {
+      padding: 14px;
+      border-radius: 14px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.58);
+      font-size: 13px;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      backdrop-filter: blur(13px);
+      -webkit-backdrop-filter: blur(13px);
+    }
+
+    .flow .arrow {
+      text-align: center;
+      color: rgba(116, 235, 213, 0.86);
+      font-size: 24px;
+      text-shadow: 0 0 16px rgba(116, 235, 213, 0.4);
+    }
+
+    .statline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: var(--glass-shadow);
+      text-align: center;
+    }
+
+    .stat strong {
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: 1;
+      display: block;
+      color: #1a294d;
+      text-shadow: 0 0 22px rgba(116, 235, 213, 0.2);
+    }
+
+    .qr {
+      width: 180px;
+      height: 180px;
+      border-radius: 14px;
+      margin: 8px auto;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25% 50%, rgba(255, 255, 255, 0.2) 50% 75%, transparent 75%),
+                  linear-gradient(-45deg, rgba(116, 235, 213, 0.35), rgba(108, 99, 255, 0.35));
+      background-size: 20px 20px, 100% 100%;
+      box-shadow: 0 0 26px rgba(116, 235, 213, 0.26);
+    }
+
+    .scan-qr {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      background: rgba(255, 255, 255, 0.67);
+      box-shadow: 0 14px 28px rgba(62, 90, 140, 0.18);
+      max-width: 420px;
+    }
+
+    .scan-qr .qr-mini {
+      width: 68px;
+      height: 68px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      background:
+        linear-gradient(45deg, rgba(255, 255, 255, 0.64) 25%, transparent 25% 50%, rgba(255, 255, 255, 0.64) 50% 75%, transparent 75%),
+        linear-gradient(-45deg, rgba(255, 101, 132, 0.42), rgba(108, 99, 255, 0.42));
+      background-size: 12px 12px, 100% 100%;
+      box-shadow: 0 10px 20px rgba(98, 77, 156, 0.22);
+    }
+
+    .scan-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(56, 73, 109, 0.78);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .ta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .ta-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.69);
+      border: 1px solid rgba(255, 255, 255, 0.86);
+      box-shadow: 0 16px 30px rgba(64, 91, 139, 0.18);
+      display: grid;
+      gap: 8px;
+    }
+
+    .ta-avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.22), rgba(255, 101, 132, 0.22));
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 10px 24px rgba(86, 67, 152, 0.2);
+    }
+
+    .photo-placeholder {
+      width: 100%;
+      min-height: 128px;
+      border-radius: 14px;
+      border: 1.5px dashed rgba(112, 133, 178, 0.55);
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(116, 235, 213, 0.12));
+      display: grid;
+      place-items: center;
+      color: rgba(53, 72, 111, 0.78);
+      font-size: 13px;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .land-copy {
+      max-width: 1050px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .emoji-strip {
+      position: absolute;
+      left: clamp(10px, 2vw, 24px);
+      bottom: clamp(10px, 2vw, 22px);
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .emoji-strip span {
+      width: 36px;
+      height: 42px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(165deg, rgba(255, 255, 255, 0.86), rgba(255, 247, 229, 0.78));
+      border: 1px solid rgba(255, 255, 255, 0.92);
+      font-size: 19px;
+      box-shadow: 0 8px 18px rgba(77, 102, 150, 0.2), inset 0 -2px 0 rgba(220, 226, 242, 0.65);
+      animation: bob 3.2s ease-in-out infinite;
+      animation-delay: calc(var(--e) * 140ms);
+      transform: rotate(calc((var(--e) - 1) * 8deg));
+    }
+
+    .feedback-box {
+      margin-top: 16px;
+      width: min(430px, 96%);
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+      box-shadow: 0 16px 28px rgba(72, 98, 148, 0.2);
+    }
+
+    .particle-wrap {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
+      opacity: 0.45;
+      animation: driftUp 9s linear infinite;
+      animation-delay: var(--delay);
+      left: var(--left);
+      bottom: -20px;
+    }
+
+    .click-zone {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 45vw;
+      z-index: 15;
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      outline: none;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .click-zone:focus,
+    .click-zone:focus-visible {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .click-zone.prev { left: 0; }
+    .click-zone.next { right: 0; }
+
+    .ui {
+      position: fixed;
+      inset: auto 20px 20px auto;
+      z-index: 25;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-track {
+      position: fixed;
+      left: 18px;
+      right: 18px;
+      bottom: 80px;
+      height: 10px;
+      border-radius: 999px;
+      z-index: 24;
+      background: linear-gradient(90deg, rgba(255, 250, 236, 0.7), rgba(232, 243, 255, 0.68));
+      border: 1px solid rgba(255, 255, 255, 0.86);
+      overflow: hidden;
+      box-shadow: 0 10px 22px rgba(70, 96, 146, 0.14);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 2.5%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #2a49ac, #ab83f0, #ef4f7f, #f3b65f, #65d8a4);
+      background-size: 220% 100%;
+      animation: shimmer 4s linear infinite;
+      transition: width 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .section-nav {
+      position: fixed;
+      left: 20px;
+      top: 20px;
+      z-index: 26;
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 22px;
+      background: linear-gradient(160deg, rgba(255, 247, 228, 0.84), rgba(242, 248, 255, 0.84));
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 14px 32px rgba(53, 82, 128, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      flex-wrap: wrap;
+      max-width: min(760px, calc(100vw - 180px));
+    }
+
+    .section-chip {
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      color: rgba(40, 65, 114, 0.88);
+      border: 1px solid rgba(150, 170, 212, 0.45);
+      background: rgba(255, 255, 255, 0.78);
+      transition: transform 220ms ease, background 220ms ease, color 220ms ease, box-shadow 220ms ease;
+      cursor: pointer;
+    }
+
+    .section-chip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(89, 111, 174, 0.2);
+    }
+
+    .section-chip.active {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.82);
+      background: linear-gradient(120deg, rgba(42, 73, 172, 0.92), rgba(211, 58, 106, 0.86));
+      box-shadow: 0 10px 20px rgba(73, 82, 163, 0.32);
+      transform: translateY(-1px);
+    }
+
+    .section-badge {
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      background: linear-gradient(150deg, rgba(255, 251, 240, 0.84), rgba(239, 246, 255, 0.84));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: rgba(19, 36, 69, 0.95);
+      box-shadow: 0 12px 28px rgba(53, 82, 128, 0.22);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 12px;
+      min-width: 110px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .counter,
+    .ui-btn {
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      background: linear-gradient(150deg, rgba(255, 251, 240, 0.86), rgba(239, 246, 255, 0.82));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: rgba(19, 36, 69, 0.95);
+      box-shadow: 0 12px 30px rgba(53, 82, 128, 0.22);
+      font-size: 14px;
+      letter-spacing: 0.06em;
+    }
+
+    .counter {
+      padding: 12px 14px;
+      min-width: 88px;
+      text-align: center;
+      font-weight: 720;
+    }
+
+    .ui-btn {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .notes-drawer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateY(100%);
+      transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 30;
+      padding: 14px 18px 16px;
+      background: linear-gradient(180deg, rgba(254, 252, 255, 0.95), rgba(244, 249, 255, 0.96));
+      border-top: 1px solid rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      max-height: 44vh;
+      overflow: auto;
+    }
+
+    .notes-drawer.open {
+      transform: translateY(0);
+    }
+
+    .notes-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: rgba(48, 72, 118, 0.9);
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .notes-body {
+      font-size: 18px;
+      color: rgba(31, 49, 82, 0.95);
+      line-height: 1.45;
+      max-width: 1100px;
+    }
+
+    .legend {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      width: min(380px, calc(100vw - 40px));
+      z-index: 32;
+      padding: 16px;
+      border-radius: 18px;
+      transform: translateY(-16px) scale(0.98);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .legend.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .legend h4 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .legend ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .legend li {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      font-size: 16px;
+      color: rgba(41, 59, 94, 0.9);
+    }
+
+    .legend kbd {
+      border: 1px solid rgba(157, 175, 213, 0.66);
+      border-bottom-width: 3px;
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-family: inherit;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .legend-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(156, 176, 216, 0.7);
+      background: rgba(255, 255, 255, 0.72);
+      color: #1f3565;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .subtle {
+      color: rgba(35, 54, 93, 0.76);
+      font-size: clamp(16px, 1.5vw, 20px);
+    }
+
+    @media (max-width: 1200px) {
+      .grid-4,
+      .crud,
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .flow {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .flow .arrow:nth-child(even) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .grid-2,
+      .grid-3,
+      .network,
+      .danger-board,
+      .matrix,
+      .statline,
+      .ta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .doc-grid,
+      .vote-item {
+        grid-template-columns: 1fr;
+      }
+
+      .tier .badge {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .vote-tags {
+        justify-content: flex-start;
+      }
+
+      .bridge {
+        width: 100%;
+      }
+
+      .slide {
+        padding: 18px;
+      }
+
+      .click-zone {
+        width: 34vw;
+      }
+
+      .section-nav {
+        left: 12px;
+        top: 12px;
+        right: 12px;
+        max-width: none;
+      }
+
+      .notes-body {
+        font-size: 16px;
+      }
+
+      .spotlight {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root {
+        --heading: clamp(46px, 10vw, 62px);
+      }
+
+      .hero-title {
+        font-size: clamp(44px, 11vw, 66px);
+      }
+
+      .pill {
+        font-size: 12px;
+      }
+
+      .ui {
+        right: 12px;
+        bottom: 12px;
+      }
+
+      .progress-track {
+        left: 12px;
+        right: 12px;
+        bottom: 62px;
+        height: 8px;
+      }
+
+      .section-nav {
+        display: none;
+      }
+
+      .counter {
+        min-width: 74px;
+        font-size: 12px;
+      }
+
+      .ui-btn {
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 16px rgba(116, 235, 213, 0.16), var(--glass-shadow); }
+      50% { box-shadow: 0 0 34px rgba(116, 235, 213, 0.35), var(--glass-shadow); }
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes contentIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(0, 0, 0) scale(1); }
+      to { transform: translate3d(28px, -20px, 0) scale(1.05); }
+    }
+
+    @keyframes shimmer {
+      from { background-position: 0 0; }
+      to { background-position: 220% 0; }
+    }
+
+    @keyframes auroraShift {
+      from { transform: translate3d(-2%, -1%, 0) rotate(0deg) scale(1); }
+      to { transform: translate3d(3%, 2%, 0) rotate(18deg) scale(1.06); }
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0) rotate(var(--r)); }
+      50% { transform: translateY(-8px) rotate(calc(var(--r) + 6deg)); }
+    }
+
+    @keyframes driftUp {
+      from { transform: translateY(0) scale(0.8); opacity: 0; }
+      20% { opacity: 0.48; }
+      to { transform: translateY(-105vh) scale(1.4); opacity: 0; }
+    }
+
+    @keyframes floatEmoji {
+      0%, 100% { transform: translateY(0) rotate(var(--rot)); opacity: 0.14; }
+      50% { transform: translateY(-18px) rotate(calc(var(--rot) + 7deg)); opacity: 0.24; }
+    }
+  </style>
+</head>
+<body>
+  <div class="global-orb"></div>
+  <div class="storybook-layer" aria-hidden="true">
+    <div class="canopy"></div>
+    <div class="tree-left"></div>
+    <div class="tree-right"></div>
+    <div class="hills"></div>
+    <div class="river"></div>
+  </div>
+  <div class="aurora-layer"></div>
+  <div class="spotlight" id="spotlight"></div>
+  <div class="emoji-cloud" aria-hidden="true">
+    <span style="--x:6%; --y:18%; --dur:11.4s; --delay:0s; --rot:-7deg;">🦋</span>
+    <span style="--x:16%; --y:76%; --dur:14s; --delay:1.2s; --rot:6deg;">🍄</span>
+    <span style="--x:31%; --y:22%; --dur:13.2s; --delay:2.2s; --rot:-9deg;">🐇</span>
+    <span style="--x:45%; --y:82%; --dur:12.4s; --delay:0.8s; --rot:8deg;">🫖</span>
+    <span style="--x:57%; --y:14%; --dur:15.1s; --delay:3.1s; --rot:-4deg;">⏱️</span>
+    <span style="--x:72%; --y:63%; --dur:12.6s; --delay:1.8s; --rot:9deg;">🐛</span>
+    <span style="--x:84%; --y:24%; --dur:13.5s; --delay:2.6s; --rot:-5deg;">🃏</span>
+    <span style="--x:93%; --y:76%; --dur:15.4s; --delay:4.2s; --rot:4deg;">🎩</span>
+  </div>
+  <div class="section-nav" id="sectionNav" aria-label="Workshop sections">
+    <!-- <span class="section-chip active">🐇 Hook</span> -->
+    <span class="section-chip">📜 PRD</span>
+    <span class="section-chip">🍄 Activity 1</span>
+    <span class="section-chip">🫖 User Stories</span>
+    <span class="section-chip">🃏 Scope</span>
+    <span class="section-chip">⏱️ API</span>
+    <span class="section-chip">🌿 Practice</span>
+    <span class="section-chip">🎩 Close</span>
+  </div>
+
+  <div class="deck" id="deck" aria-live="polite">
+    <section class="slide is-active" data-index="1">
+      <div class="slide-content" style="justify-items:start; align-content:center;">
+        <div class="label"></div>
+        <h1 style="max-width: 1120px;">Let me tell you about my friend...</h1>
+        <p class="hero-subtitle">He had energy. He had snacks. He had 14 tabs open. But did NOT understand the assignment.</p>
+        <article class="glass" style="padding:20px; max-width:860px;">
+          <p><strong>Our Goal:</strong> Make sure your team builds something people want, in the time you have.</p>
+        </article>
+      </div>
+      <div style="position:absolute; right:8%; top:16%; width:380px; height:380px; border-radius:50%; background:radial-gradient(circle at 30% 25%, rgba(116,235,213,0.72), rgba(108,99,255,0.22), rgba(255,101,132,0.05)); filter:blur(1px); box-shadow:0 0 90px rgba(116,235,213,0.35); animation: drift 8s ease-in-out infinite alternate;"></div>
+    </section>
+
+    <section class="slide" data-index="2">
+      <div class="slide-content" style="justify-items:start; align-content:center;">
+        <div class="label">cmd-f 2026</div>
+        <h1 class="hero-title">Setting Up Your Project For Success</h1>
+        <p class="hero-subtitle">Build the right thing, not just a thing.</p>
+        <div class="meta">
+          <span class="pill gradient-purple">Workshop Kickoff</span>
+          <span>Product Thinking • Team Alignment • Shipping Faster</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="3">
+      <div class="slide-content">
+        <div class="label">Your Facilitation Team</div>
+        <h2>Meet your workshop lead + TAs</h2>
+        <div class="ta-grid">
+          <article class="ta-card">
+            <div class="photo-placeholder">Photo Placeholder</div>
+            <h3>Fahim</h3>
+            <p><strong>Career:</strong> . </p>
+          </article>
+          <article class="ta-card">
+            <div class="photo-placeholder">Photo Placeholder</div>
+            <h3>Eric</h3>
+            <p><strong>Career:</strong> .</p>
+          </article>
+          <article class="ta-card">
+            <div class="photo-placeholder">Photo Placeholder</div>
+            <h3>Kashish</h3>
+            <p><strong>Career:</strong> .</p>
+          </article>
+          <article class="ta-card">
+            <div class="photo-placeholder">Photo Placeholder</div>
+            <h3>Kelly</h3>
+            <p><strong>Career:</strong> .</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="4">
+      <div class="slide-content" style="align-content:center;">
+        <div class="label">Land Acknowledgement</div>
+        <article class="glass land-copy" style="padding:28px;">
+          <p>I acknowledge that PRD 101 takes place on the traditional, ancestral, and unceded territory of the wmaekwayam (Musqueam) people, where knowledge has been shared and passed down for generations.</p>
+          <p>Just as it has where I'm from! In the Treaty 7 region, comprising of the Blackfoot Confederacy, Tsuut 'ina, and Stoney Nakoda First Nation—also known as Calgary.</p>
+          <div class="scan-qr" style="max-width:520px;">
+            <div class="qr-mini" aria-hidden="true"></div>
+            <div>
+              <p class="scan-label">Land Acknowledgement QR</p>
+              <p>Scan to access learning resources and local Nation links.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide" data-index="5">
+      <div class="slide-content" style="align-content:center;">
+        <div class="label">Opening Question + Agenda</div>
+        <h2>How many hackathon projects ship something nobody wanted?</h2>
+        <p class="subtle">More than you'd think. So here’s our game plan today:</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top: 8px; align-items:center;">
+          <!-- <span class="pill gradient-coral">Hook</span>
+          <span class="tiny" style="font-size:20px; color:rgba(66,82,117,0.78);">→</span> -->
+          <span class="pill gradient-purple">What is a PRD</span>
+          <span class="tiny" style="font-size:20px; color:rgba(66,82,117,0.78);">→</span>
+          <span class="pill gradient-mint">User Stories</span>
+          <span class="tiny" style="font-size:20px; color:rgba(66,82,117,0.78);">→</span>
+          <span class="pill gradient-gold">Scoping</span>
+          <span class="tiny" style="font-size:20px; color:rgba(66,82,117,0.78);">→</span>
+          <span class="pill gradient-lavender">API Handshake</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="6">
+      <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
+        <div class="label">Part 1</div>
+        <h1>What Are We Building?</h1>
+        <div class="accent-line"></div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="7">
+      <div class="slide-content">
+        <div class="label">PRD Definition</div>
+        <h2>Product Requirements Document</h2>
+        <div class="grid-3">
+          <article class="glass" style="padding:20px; display:grid; gap:10px;">
+            <div class="mini-icon">🧭</div>
+            <h3>WHAT we're building</h3>
+            <p>The specific product outcome, clearly named and described.</p>
+          </article>
+          <article class="glass" style="padding:20px; display:grid; gap:10px;">
+            <div class="mini-icon">👤</div>
+            <h3>FOR WHOM</h3>
+            <p>The exact user segment this project is designed for.</p>
+          </article>
+          <article class="glass" style="padding:20px; display:grid; gap:10px;">
+            <div class="mini-icon">✨</div>
+            <h3>WHY it matters</h3>
+            <p>The core value and reason this should exist right now.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="8">
+      <div class="slide-content">
+        <div class="label">Without a PRD</div>
+        <h2>Everyone builds in different directions.</h2>
+        <div class="grid-3">
+          <article class="glass-soft x-glow" style="padding:20px; display:grid; gap:8px;">
+            <h3>Frontend</h3>
+            <p>Builds a full settings page.</p>
+            <p class="tiny">❌ No agreed behavior</p>
+          </article>
+          <article class="glass-soft x-glow" style="padding:20px; display:grid; gap:8px;">
+            <h3>Backend</h3>
+            <p>Builds no settings endpoint.</p>
+            <p class="tiny">❌ Missing contract</p>
+          </article>
+          <article class="glass-soft x-glow" style="padding:20px; display:grid; gap:8px;">
+            <h3>Design</h3>
+            <p>Designed 3 screens nobody asked for.</p>
+            <p class="tiny">❌ No shared target</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="9">
+      <div class="slide-content">
+        <div class="label">With a PRD</div>
+        <h2>Everyone ships to the same spec.</h2>
+        <div class="grid-3">
+          <article class="glass-soft check-glow" style="padding:20px; display:grid; gap:8px; background:rgba(67,233,123,0.1);">
+            <h3>Frontend</h3>
+            <p>Builds only the approved settings UI.</p>
+            <p class="tiny">✅ Scoped to requirements</p>
+          </article>
+          <article class="glass-soft check-glow" style="padding:20px; display:grid; gap:8px; background:rgba(67,233,123,0.1);">
+            <h3>Backend</h3>
+            <p>Implements the matching endpoint.</p>
+            <p class="tiny">✅ Contract-first delivery</p>
+          </article>
+          <article class="glass-soft check-glow" style="padding:20px; display:grid; gap:8px; background:rgba(67,233,123,0.1);">
+            <h3>Design</h3>
+            <p>Designs only what supports the same flow.</p>
+            <p class="tiny">✅ Aligned output</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="10">
+      <div class="slide-content">
+        <div class="label">Real Example</div>
+        <article class="glass" style="padding:28px; max-width:920px; display:grid; gap:12px;">
+          <div class="mini-icon" style="width:56px; height:56px; font-size:30px; box-shadow:0 0 28px rgba(255,101,132,0.38);">🍓</div>
+          <h2>The Pomodoro App</h2>
+          <p>A cute pomodoro timer where completing sessions earns you random fruits/vegetables — rarer fruits are harder to collect.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide" data-index="11">
+      <div class="slide-content">
+        <div class="label">Anatomy of a PRD</div>
+        <div class="timeline">
+          <div class="node">Overview</div>
+          <div class="node">Users</div>
+          <div class="node">Features</div>
+          <div class="node">Scope</div>
+          <div class="node">API Specs</div>
+        </div>
+        <div class="connector" style="margin-top:8px;">
+          <span></span><div class="dot-line"></div><span></span><div class="dot-line"></div><span></span><div class="dot-line"></div><span></span><div class="dot-line"></div><span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="12">
+      <div class="slide-content">
+        <div class="label">PRD Template Preview</div>
+        <div class="doc-shell">
+          <h3 style="font-size:34px;">Project Brief</h3>
+          <div class="doc-grid">
+            <div class="doc-field"><strong>App Name</strong><br><span class="subtle">Pomodoro Harvest</span></div>
+            <div class="doc-field"><strong>Target User</strong><br><span class="subtle">Students in deep focus blocks</span></div>
+            <div class="doc-field"><strong>Core Problem</strong><br><span class="subtle">Users lose focus and motivation quickly</span></div>
+            <div class="doc-field"><strong>Must Have Features</strong><br><span class="subtle">Timer, rewards, notification, simple settings</span></div>
+            <div class="doc-field" style="grid-column: 1 / -1;"><strong>Out of Scope</strong><br><span class="subtle">Social feed, marketplace, multiplayer challenges</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide activity" data-index="13">
+      <div class="slide-content">
+        <span class="badge-xl">ACTIVITY 01 — 3 min</span>
+        <h1>Telephone Disaster</h1>
+        <article class="warm-block">
+          <p>We gave a team the brief: “Make something social for students.” Here's what they built...</p>
+        </article>
+        <div class="scan-qr">
+          <div class="qr-mini" aria-hidden="true"></div>
+          <div>
+            <p class="scan-label">Mini Activity QR</p>
+            <p>Scan to submit your guess before the reveal.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide activity" data-index="14">
+      <div class="slide-content">
+        <div class="label">The Reveal</div>
+        <h2 style="color:#7f2039;">Overcomplicated social network for students</h2>
+        <div class="danger-board">
+          <div class="danger-column">
+            <h3>AR Campus Layer</h3>
+            <ul>
+              <li>• Geotagged virtual classrooms</li>
+              <li>• AR filters for attendance streaks</li>
+            </ul>
+          </div>
+          <div class="danger-column">
+            <h3>NFT Badge Economy</h3>
+            <ul>
+              <li>• Tradable “study reputation” tokens</li>
+              <li>• Wallet gating for profile themes</li>
+            </ul>
+          </div>
+          <div class="danger-column">
+            <h3>Hyper Leaderboard</h3>
+            <ul>
+              <li>• Daily rank decay mechanic</li>
+              <li>• Nobody asked for any of this</li>
+            </ul>
+          </div>
+        </div>
+        <p style="text-align:center; color:#7f2039; font-size:28px; margin-top:8px;">What went wrong?</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="15" style="background:radial-gradient(circle at 12% 18%, rgba(255,101,132,0.28), transparent 38%), radial-gradient(circle at 88% 76%, rgba(184,140,255,0.24), transparent 44%), linear-gradient(155deg, #fff2fa, #f7ecff 48%, #edf4ff 100%);">
+      <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
+        <div class="label">Part 2</div>
+        <h1>Who Are We Building For?</h1>
+        <div class="accent-line" style="background:linear-gradient(90deg, #ff6584, #b88cff);"></div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="16">
+      <div class="slide-content">
+        <div class="label">What Is A User Story</div>
+        <article class="code-block" style="max-width:980px;">
+          As a <span style="color:#74ebd5;">[user]</span>,
+          I want <span style="color:#ff6584;">[feature]</span>
+          so that <span style="color:#f7971e;">[outcome]</span>.
+        </article>
+        <p class="subtle">Human-readable. Outcome-driven. Easy for product, design, and engineering to align on.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="17">
+      <div class="slide-content">
+        <div class="label">Good vs Bad</div>
+        <div class="grid-2">
+          <article class="glass-soft x-glow" style="padding:22px; display:grid; gap:10px;">
+            <span class="pill gradient-coral">BAD</span>
+            <p>“As someone, I want the timer to work so things happen.”</p>
+          </article>
+          <article class="glass-soft check-glow" style="padding:22px; display:grid; gap:10px; background:rgba(67,233,123,0.1);">
+            <span class="pill gradient-mint">GOOD</span>
+            <p>“As a student, I want to be notified when my focus session ends so I can take a break.”</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="18">
+      <div class="slide-content">
+        <div class="label">Pomodoro Examples</div>
+        <h2>4 user stories from the app</h2>
+        <div class="grid-2" style="grid-template-columns: repeat(2, minmax(0,1fr));">
+          <div class="pill gradient-purple" style="padding:16px 18px; border-radius:16px; text-transform:none; letter-spacing:0.04em; font-size:19px;">🔔 Get a notification when focus ends</div>
+          <div class="pill gradient-coral" style="padding:16px 18px; border-radius:16px; text-transform:none; letter-spacing:0.04em; font-size:19px;">▶️ Start, pause, and reset sessions</div>
+          <div class="pill gradient-mint" style="padding:16px 18px; border-radius:16px; text-transform:none; letter-spacing:0.04em; font-size:19px;">🍓 Earn random rewards per completed session</div>
+          <div class="pill gradient-lavender" style="padding:16px 18px; border-radius:16px; text-transform:none; letter-spacing:0.04em; font-size:19px;">🖼️ View collected fruits in a gallery</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="19">
+      <div class="slide-content">
+        <div class="label">User Stories → Features</div>
+        <h2>One story maps across the team</h2>
+        <div class="grid-3">
+          <article class="glass" style="padding:20px;">
+            <p class="tiny">Frontend</p>
+            <h3>UI Component</h3>
+            <p>Timer completion toast + reward animation.</p>
+          </article>
+          <article class="glass" style="padding:20px;">
+            <p class="tiny">Backend</p>
+            <h3>API Endpoint</h3>
+            <p><code>POST /session/complete</code> returns reward payload.</p>
+          </article>
+          <article class="glass" style="padding:20px;">
+            <p class="tiny">Design</p>
+            <h3>Screen</h3>
+            <p>Session-complete state with reward reveal.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide activity" data-index="20">
+      <div class="slide-content">
+        <span class="badge-xl">ACTIVITY 02 — 5 min</span>
+        <h1>Fix the User Story</h1>
+        <article class="warm-block" style="max-width:1000px;">
+          <p><strong>Broken story:</strong> “As someone, I want notifications so things are better.”</p>
+          <p style="margin-top:10px;">Rewrite it in pairs using: user + feature + outcome.</p>
+        </article>
+        <div class="countdown-ring"><span>90s</span></div>
+        <div class="scan-qr">
+          <div class="qr-mini" aria-hidden="true"></div>
+          <div>
+            <p class="scan-label">Mini Activity QR</p>
+            <p>Scan to drop your rewritten story with your pair.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="21">
+      <div class="slide-content">
+        <div class="grid-2" style="align-items:center;">
+          <div style="display:grid; gap:12px;">
+            <div class="label">Part 3</div>
+            <h1 style="max-width:760px;">What Are We NOT Building?</h1>
+          </div>
+          <article class="glass" style="padding:26px; max-width:520px; justify-self:end;">
+            <p class="subtle" style="font-size: clamp(22px, 2.4vw, 32px); color: rgba(20, 90, 58, 0.9);">Scope is a superpower.</p>
+            <div style="height:6px; border-radius:999px; margin-top:16px; background:linear-gradient(90deg, rgba(67,233,123,0.85), rgba(116,235,213,0.68)); box-shadow:0 0 20px rgba(67,233,123,0.35);"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="22">
+      <div class="slide-content">
+        <div class="label">Scope Creep</div>
+        <div class="grid-2">
+          <article class="glass" style="padding:22px; display:grid; gap:12px;">
+            <h2>Definition</h2>
+            <p>Scope creep is when “small additions” gradually turn a focused project into an impossible one.</p>
+            <p>Relatable example: a timer app slowly becomes a social network, task manager, and analytics dashboard.</p>
+          </article>
+          <article class="glass spiral"></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="23">
+      <div class="slide-content">
+        <div class="label">MoSCoW Method</div>
+        <h2>Must / Should / Could / Won’t</h2>
+        <div class="tier">
+          <div class="badge" style="background:linear-gradient(120deg, rgba(247,151,30,0.84), rgba(255,206,84,0.66));">MUST HAVE (gold)</div>
+          <div class="badge" style="background:linear-gradient(120deg, rgba(202,214,230,0.78), rgba(140,152,170,0.55));">SHOULD HAVE (silver)</div>
+          <div class="badge" style="background:linear-gradient(120deg, rgba(116,235,213,0.82), rgba(108,99,255,0.58));">COULD HAVE (teal)</div>
+          <div class="badge" style="background:linear-gradient(120deg, rgba(120,120,132,0.75), rgba(88,91,106,0.62));">WON'T HAVE THIS TIME (grey)</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="24">
+      <div class="slide-content">
+        <div class="label">Pomodoro Scope</div>
+        <div class="matrix">
+          <article class="glass check-glow" style="padding:22px;">
+            <h3>Must Have</h3>
+            <ul>
+              <li>✅ Start/pause/reset timer</li>
+              <li>✅ Session complete notification</li>
+              <li>✅ Random fruit reward</li>
+              <li>✅ Basic settings save</li>
+            </ul>
+          </article>
+          <article class="glass x-glow" style="padding:22px;">
+            <h3>Cut List</h3>
+            <ul>
+              <li>~~Social feed~~</li>
+              <li>~~NFT badges~~</li>
+              <li>~~Multiplayer leaderboard~~</li>
+              <li>~~Advanced analytics dashboard~~</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide activity" data-index="25">
+      <div class="slide-content">
+        <span class="badge-xl">ACTIVITY 03 — 8 min</span>
+        <h1>Feature Court</h1>
+        <p>Audience votes: Must / Should / Cut</p>
+        <div class="vote-list">
+          <div class="vote-item"><p>(1) Fruit gallery</p><div class="vote-tags"><span>Must</span><span>Should</span><span>Cut</span></div></div>
+          <div class="vote-item"><p>(2) Sound notification</p><div class="vote-tags"><span>Must</span><span>Should</span><span>Cut</span></div></div>
+          <div class="vote-item"><p>(3) Settings page with routing</p><div class="vote-tags"><span>Must</span><span>Should</span><span>Cut</span></div></div>
+          <div class="vote-item"><p>(4) Custom timer length</p><div class="vote-tags"><span>Must</span><span>Should</span><span>Cut</span></div></div>
+          <div class="vote-item"><p>(5) Todo list integration</p><div class="vote-tags"><span>Must</span><span>Should</span><span>Cut</span></div></div>
+        </div>
+        <div class="scan-qr">
+          <div class="qr-mini" aria-hidden="true"></div>
+          <div>
+            <p class="scan-label">Mini Activity QR</p>
+            <p>Scan to vote live feature-by-feature.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="26">
+      <div class="slide-content">
+        <div class="label">Feature Court Reveal</div>
+        <h2>What the team decided + why</h2>
+        <div class="grid-3">
+          <article class="decision-card">
+            <h3>Must</h3>
+            <p>Sound notification, custom timer length</p>
+          </article>
+          <article class="decision-card">
+            <h3>Should</h3>
+            <p>Fruit gallery, settings page with routing</p>
+          </article>
+          <article class="decision-card">
+            <h3>Cut</h3>
+            <p>Todo list integration (too broad for hackathon scope)</p>
+          </article>
+        </div>
+        <p style="font-size:26px; margin-top:8px;">Disagree with any of these?</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="27">
+      <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
+        <h1>Every feature you add is a tradeoff.</h1>
+        <h2 style="color:#146944;">Scope down to ship something real.</h2>
+      </div>
+    </section>
+
+    <section class="slide" data-index="28">
+      <div class="slide-content">
+        <div class="label">Part 4</div>
+        <h1>Why API Alignment Matters for Your PRD</h1>
+        <p class="subtle">This is not a backend lesson. This is a clarity lesson. The API section in your PRD is how your team avoids “I thought you were building that.”</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="29">
+      <div class="slide-content">
+        <div class="label">Connection Flow</div>
+        <h2>PRD line → User story → API handshake → Working feature</h2>
+        <div class="grid-3">
+          <article class="glass" style="padding:20px;">
+            <p class="tiny">PRD</p>
+            <p>“Students can save timer preferences.”</p>
+          </article>
+          <article class="glass" style="padding:20px;">
+            <p class="tiny">User Story</p>
+            <p>As a student, I want my timer saved so every session starts how I like it.</p>
+          </article>
+          <article class="glass" style="padding:20px;">
+            <p class="tiny">API Handshake</p>
+            <p><code>POST /settings</code> with timer length, returns saved state.</p>
+          </article>
+        </div>
+        <p class="subtle">When this chain is explicit, you ship faster with less rework.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="30">
+      <div class="slide-content">
+        <div class="label">What Goes In The PRD</div>
+        <h2>The 4-line API handshake your team needs</h2>
+        <div class="grid-2">
+          <article class="glass" style="padding:22px; display:grid; gap:8px;">
+            <p>1. <strong>Purpose:</strong> what user moment this supports</p>
+            <p>2. <strong>Input:</strong> what data is sent</p>
+            <p>3. <strong>Success response:</strong> what comes back</p>
+            <p>4. <strong>Failure behavior:</strong> what happens if it fails</p>
+          </article>
+          <article class="code-block">
+            Handshake Example
+            <br><br>
+            POST /settings
+            <br>
+            body: { sessionLength: 25 }
+            <br>
+            returns: { saved: true, sessionLength: 25 }
+            <br>
+            on error: show retry toast
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="31">
+      <div class="slide-content">
+        <div class="label">PRD-First Example</div>
+        <h2>Pomodoro: from requirement to contract</h2>
+        <div class="grid-3">
+          <article class="glass" style="padding:18px;">
+            <p class="tiny">Requirement</p>
+            <p>Complete a focus session and get a reward.</p>
+            <p class="tiny" style="margin-top:8px;">Handshake</p>
+            <p><code>POST /session/complete</code></p>
+          </article>
+          <article class="glass" style="padding:18px;">
+            <p class="tiny">Requirement</p>
+            <p>See everything you have collected so far.</p>
+            <p class="tiny" style="margin-top:8px;">Handshake</p>
+            <p><code>GET /rewards</code></p>
+          </article>
+          <article class="glass" style="padding:18px;">
+            <p class="tiny">Requirement</p>
+            <p>Save timer preferences for future sessions.</p>
+            <p class="tiny" style="margin-top:8px;">Handshake</p>
+            <p><code>POST /settings</code></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="32">
+      <div class="slide-content">
+        <div class="label">Build-Readiness Check</div>
+        <h2>Before coding, confirm these 5 things</h2>
+        <div class="grid-2">
+          <article class="glass" style="padding:22px;">
+            <p>✅ We agree on the target user</p>
+            <p>✅ We agree on must-have features</p>
+            <p>✅ We agree on what we are cutting</p>
+          </article>
+          <article class="glass" style="padding:22px;">
+            <p>✅ We agree on key API handshakes</p>
+            <p>✅ We agree on what “done” looks like</p>
+            <p class="subtle" style="margin-top:8px;">If any are fuzzy, pause and clarify now.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide activity" data-index="33">
+      <div class="slide-content">
+        <span class="badge-xl">ACTIVITY 04 — 5 min</span>
+        <h1>PRD Pressure Test</h1>
+        <div class="grid-2">
+          <article class="glass" style="padding:20px;">
+            <p class="tiny">Messy Requirement</p>
+            <p>“Build something social and motivational with rewards, settings, and maybe a leaderboard.”</p>
+          </article>
+          <article class="glass" style="padding:20px; display:grid; gap:12px;">
+            <p class="tiny">Your Task</p>
+            <p>Rewrite this into:</p>
+            <p>1) one clear PRD statement</p>
+            <p>2) one user story</p>
+            <p>3) one API handshake line</p>
+          </article>
+        </div>
+        <p class="subtle">Make it specific enough that frontend + backend + design can all build the same thing.</p>
+        <div class="scan-qr">
+          <div class="qr-mini" aria-hidden="true"></div>
+          <div>
+            <p class="scan-label">Mini Activity QR</p>
+            <p>Scan to submit your pressure-test rewrite.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="34">
+      <div class="slide-content">
+        <div class="label">Debrief + Lesson</div>
+        <h2>Clear flow beats clever chaos.</h2>
+        <div class="flow">
+          <div class="step">Problem</div>
+          <div class="arrow">→</div>
+          <div class="step">PRD</div>
+          <div class="arrow">→</div>
+          <div class="step">User Story</div>
+          <div class="arrow">→</div>
+          <div class="step">Scope</div>
+          <div class="arrow">→</div>
+          <div class="step">API Handshake</div>
+          <div class="arrow">→</div>
+          <div class="step">Build</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="35">
+      <div class="slide-content">
+        <div class="label">Part 5</div>
+        <h1>Your PRD in Practice</h1>
+        <p class="subtle">This is where your team turns clarity into momentum.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="36">
+      <div class="slide-content">
+        <div class="label">The Flow</div>
+        <h2>User Research → PRD → User Stories → Scope → API Spec → Build</h2>
+        <div class="flow">
+          <div class="step">User Research</div>
+          <div class="arrow">→</div>
+          <div class="step">PRD</div>
+          <div class="arrow">→</div>
+          <div class="step">User Stories</div>
+          <div class="arrow">→</div>
+          <div class="step">Scope</div>
+          <div class="arrow">→</div>
+          <div class="step">API Spec</div>
+          <div class="arrow">→</div>
+          <div class="step">Build</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="37">
+      <div class="slide-content">
+        <div class="label">cmd-f Context</div>
+        <h2>At cmd-f, you have 24 hours.</h2>
+        <div class="statline">
+          <article class="stat"><strong>24h</strong><p>Hackathon build window</p></article>
+          <article class="stat"><strong>20m</strong><p>This process takes about 20 minutes</p></article>
+          <article class="stat"><strong>5h</strong><p>Those 20 minutes can save ~5 hours of rework</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="38">
+      <div class="slide-content">
+        <div class="label">Template Handoff</div>
+        <article class="glass" style="padding:26px; display:grid; gap:10px; justify-items:center; text-align:center; max-width:860px; margin:0 auto;">
+          <h2>We've made you a PRD template. Use it. Your future self will thank you.</h2>
+          <div class="qr" aria-label="QR code placeholder"></div>
+          <p class="subtle">Template link placeholder: <code>https://cmd-f.example/prd-template</code></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide" data-index="39">
+      <div class="slide-content">
+        <div class="label">Key Takeaways</div>
+        <div class="grid-3">
+          <article class="glass" style="padding:20px; display:grid; gap:8px;">
+            <div class="mini-icon">🧩</div>
+            <p>Shared language prevents misalignment</p>
+          </article>
+          <article class="glass" style="padding:20px; display:grid; gap:8px;">
+            <div class="mini-icon">🧠</div>
+            <p>User stories make features human</p>
+          </article>
+          <article class="glass" style="padding:20px; display:grid; gap:8px;">
+            <div class="mini-icon">🚀</div>
+            <p>Scope down to ship something real</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="40" style="background:radial-gradient(circle at 20% 20%, rgba(116,235,213,0.35), transparent 42%), radial-gradient(circle at 80% 75%, rgba(255,101,132,0.3), transparent 44%), linear-gradient(145deg, #f2f8ff, #f0ecff 44%, #fff0f5 100%);">
+      <div class="particle-wrap" aria-hidden="true">
+        <span class="particle" style="--left:8%; --delay:0s;"></span>
+        <span class="particle" style="--left:20%; --delay:1.3s;"></span>
+        <span class="particle" style="--left:33%; --delay:2.8s;"></span>
+        <span class="particle" style="--left:47%; --delay:0.9s;"></span>
+        <span class="particle" style="--left:61%; --delay:3.7s;"></span>
+        <span class="particle" style="--left:74%; --delay:1.9s;"></span>
+        <span class="particle" style="--left:87%; --delay:4.4s;"></span>
+      </div>
+      <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
+        <div class="label">cmd-f 2026</div>
+        <h1>Now go build the right thing.</h1>
+        <p class="subtle">Thank you • Next workshop teaser: Git + Figma track deep dive</p>
+        <article class="feedback-box">
+          <p class="scan-label">Feedback QR</p>
+          <div class="qr" style="width:132px; height:132px; margin: 0;"></div>
+          <p class="subtle">Scan to share workshop feedback and get next-session resources.</p>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <button class="click-zone prev" id="clickPrev" aria-label="Previous slide"></button>
+  <button class="click-zone next" id="clickNext" aria-label="Next slide"></button>
+  <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="ui">
+    <button class="ui-btn" id="prevBtn" aria-label="Previous slide">‹</button>
+    <div class="counter" id="counter">1 / 40</div>
+    <div class="section-badge" id="sectionBadge">Hook</div>
+    <button class="ui-btn" id="nextBtn" aria-label="Next slide">›</button>
+    <button class="ui-btn" id="helpBtn" aria-label="Keyboard shortcuts">?</button>
+  </div>
+
+  <aside class="legend glass" id="legend" aria-hidden="true">
+    <button class="legend-close" id="legendClose" aria-label="Close keyboard shortcuts">×</button>
+    <h4>Keyboard Shortcuts</h4>
+    <ul>
+      <li><span>Next slide</span><kbd>→</kbd></li>
+      <li><span>Previous slide</span><kbd>←</kbd></li>
+      <li><span>Toggle speaker notes</span><kbd>N</kbd></li>
+      <li><span>Toggle this legend</span><kbd>?</kbd></li>
+      <li><span>Jump to start / end</span><kbd>Home / End</kbd></li>
+    </ul>
+  </aside>
+
+  <aside class="notes-drawer" id="notesDrawer" aria-live="polite">
+    <div class="notes-title">
+      <span>Speaker Notes</span>
+      <span id="notesSlideLabel">Slide 1</span>
+    </div>
+    <p class="notes-body" id="notesText"></p>
+  </aside>
+
+  <script>
+    (() => {
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const total = slides.length;
+      const counter = document.getElementById('counter');
+      const notesDrawer = document.getElementById('notesDrawer');
+      const notesText = document.getElementById('notesText');
+      const notesSlideLabel = document.getElementById('notesSlideLabel');
+      const legend = document.getElementById('legend');
+      const helpBtn = document.getElementById('helpBtn');
+      const legendClose = document.getElementById('legendClose');
+      const sectionBadge = document.getElementById('sectionBadge');
+      const sectionChips = Array.from(document.querySelectorAll('.section-chip'));
+      const progressFill = document.getElementById('progressFill');
+      const spotlight = document.getElementById('spotlight');
+
+      const slideEmoji = [
+        "🚀✨🎯", "🤔💭❓", "🧠⚡🔀", "💬🧭📝", "🗺️🌈🧩",
+        "🧭💡📌", "📝👤✨", "❌🚧🤯", "✅🎉🤝", "🍓⏱️🥕",
+        "🗂️➡️📦", "📄🪄✅", "🎯⏳📣", "🧨🌪️❗", "👥💗🧠",
+        "📚🧵🪄", "⚖️✅❌", "🔔▶️🍓", "🔗🧩⚙️", "⏱️🛠️👯",
+        "✂️🎯🧠", "🌀➕📉", "🏷️🥇🥈", "📦✅✂️", "🗳️⚖️📋",
+        "📉💬🤔", "🧠🚀✨", "🤝🧩⚙️", "🗣️🌐🔤", "🌐📡🧾",
+        "🛠️➕🔍", "📡🍓⚙️", "🧪🎯🔐", "🔐🔁📘", "🧑‍🏫✨💬",
+        "🛤️🧱🚀", "⏳⚡📈", "🎁🔗📄", "✅🧠🚀", "🎉💫📱"
+      ];
+
+      const stickerPool = [
+        ["🦋", "🍄", "♣️"],
+        ["🐇", "🫖", "♦️"],
+        ["⏱️", "🎩", "♥️"],
+        ["🃏", "🐛", "♠️"],
+        ["🌿", "✨", "🍓"]
+      ];
+
+      const sections = [
+        { name: 'Hook', start: 1, end: 5 },
+        { name: 'PRD', start: 6, end: 12 },
+        { name: 'Activity 1', start: 13, end: 14 },
+        { name: 'User Stories', start: 15, end: 20 },
+        { name: 'Scope', start: 21, end: 27 },
+        { name: 'API', start: 28, end: 31 },
+        { name: 'Practice', start: 32, end: 38 },
+        { name: 'Close', start: 39, end: 40 }
+      ];
+
+      const speakerNotes = [
+        "Hello hello everyone. Quick story: I watched a team sprint for 24 hours and then realize they built the wrong thing. We are not doing that tonight.",
+        "Welcome to PRD 101: Setting Up Your Project For Success. Today is about building the right thing, not just a thing.",
+        "Let me introduce the people who are going to save your weekend: me, your workshop lead, and our three amazing TAs.",
+        "I want to begin with a land acknowledgement. This matters deeply to how we gather, learn, and build community in this space.",
+        "Real question: how many hackathon projects ship something nobody asked for? Exactly. That is why this session exists.",
+        "Part 1: what are we building? Before tools, before code, before design polish, we need alignment.",
+        "A PRD is simple: what we are building, for whom, and why it matters. If one of those is fuzzy, the whole project gets fuzzy.",
+        "Without a PRD, everybody works hard in different directions. It feels productive, but it creates chaos.",
+        "With a PRD, same team, same talent, totally different result. Clarity is the multiplier.",
+        "We will use one running example all workshop: a Pomodoro app with collectible fruit rewards.",
+        "This is the anatomy. Overview, users, features, scope, and API handshake. That sequence keeps teams synced.",
+        "Here is a lightweight template you can fill in fast. Twenty minutes here saves hours later.",
+        "Activity one: Telephone Disaster. Scan the QR and submit your guess before I reveal what the team built.",
+        "And here is the reveal: beautiful chaos, zero focus. This is what happens when the brief is vague.",
+        "Part 2: who are we building for? We shift from product ambition to user reality.",
+        "Here is the formula: as a user, I want a feature, so that I get an outcome. Keep it human and specific.",
+        "This is the difference between vague and useful. Better stories create better products.",
+        "These four user stories are strong because each one is testable and clear.",
+        "One good story should map cleanly to frontend, backend, and design. No guessing, no hand-wavy assumptions.",
+        "Activity two: fix the broken story. Keep it tight and outcome-driven, then submit your rewrite.",
+        "Part 3 is scoping, where great teams separate themselves from busy teams.",
+        "Scope creep sounds small in the moment, but it quietly kills momentum and quality.",
+        "MoSCoW gives us four lanes: Must, Should, Could, and Won't this time. 'Could' is nice-to-have, not mission-critical.",
+        "Here are our Pomodoro scope calls. Notice how much power comes from clear cuts.",
+        "Feature Court time. Fast votes, strong opinions, and then we lock answers through the QR.",
+        "Here is what the team chose. You might disagree with one, and that is good conversation.",
+        "Core lesson: every feature is a tradeoff. If everything is priority, nothing is priority.",
+        "Part 4 is short and practical: why API clarity matters for your PRD.",
+        "This is the chain: PRD line to user story to API handshake to working feature.",
+        "Your handshake only needs four lines: purpose, input, success response, and failure behavior.",
+        "These Pomodoro examples show the chain in action. Requirement in, contract out, feature shipped.",
+        "Before coding, run this readiness check. If these five are not clear, pause and clarify first.",
+        "Activity four: PRD pressure test. Turn a messy requirement into one crisp PRD line, story, and handshake.",
+        "Debrief: clear flow beats clever chaos. Every single time.",
+        "Part 5: putting it all together in practice. This is your execution system.",
+        "This end-to-end flow is your weekend operating model. Screenshot this if you need to.",
+        "At cmd-f, you get 24 hours. Spending 20 minutes on clarity can save five hours of rework.",
+        "Here is your template handoff. Use it, adapt it, and thank yourself later.",
+        "Three takeaways: shared language, human stories, and ruthless scope discipline.",
+        "Thank you for building with intention. Scan the feedback QR, and I will see you in the next workshop."
+      ];
+
+      let index = 0;
+      let notesOpen = false;
+      let legendOpen = false;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const clampIndex = (value) => Math.max(0, Math.min(total - 1, value));
+      const getSectionIndex = (slideNumber) => sections.findIndex((section) => slideNumber >= section.start && slideNumber <= section.end);
+
+      slides.forEach((slide, i) => {
+        slide.dataset.emoji = slideEmoji[i] || "✨";
+        const contentKids = Array.from(slide.querySelectorAll('.slide-content > *'));
+        contentKids.forEach((el, kidIndex) => el.style.setProperty('--stagger', kidIndex));
+        const strip = document.createElement('div');
+        strip.className = 'emoji-strip';
+        const trio = stickerPool[i % stickerPool.length];
+        strip.innerHTML = trio.map((icon, iconIndex) => `<span style="--e:${iconIndex};">${icon}</span>`).join('');
+        slide.appendChild(strip);
+      });
+
+      const render = () => {
+        slides.forEach((slide, i) => {
+          slide.classList.remove('is-active', 'is-before', 'is-after');
+          if (i === index) slide.classList.add('is-active');
+          else if (i < index) slide.classList.add('is-before');
+          else slide.classList.add('is-after');
+        });
+
+        counter.textContent = `${index + 1} / ${total}`;
+        progressFill.style.width = `${((index + 1) / total) * 100}%`;
+        notesSlideLabel.textContent = `Slide ${index + 1}`;
+        notesText.textContent = speakerNotes[index] || 'No note available for this slide.';
+        const sectionIndex = getSectionIndex(index + 1);
+        if (sectionIndex >= 0) {
+          sectionBadge.textContent = sections[sectionIndex].name;
+          sectionChips.forEach((chip, chipIndex) => {
+            chip.classList.toggle('active', chipIndex === sectionIndex);
+          });
+        }
+      };
+
+      const goTo = (nextIndex) => {
+        const safe = clampIndex(nextIndex);
+        if (safe === index) {
+          render();
+          return;
+        }
+        index = safe;
+        render();
+      };
+
+      const next = () => goTo(index + 1);
+      const prev = () => goTo(index - 1);
+
+      const toggleNotes = () => {
+        notesOpen = !notesOpen;
+        notesDrawer.classList.toggle('open', notesOpen);
+      };
+
+      const toggleLegend = () => {
+        legendOpen = !legendOpen;
+        legend.classList.toggle('open', legendOpen);
+        legend.setAttribute('aria-hidden', String(!legendOpen));
+      };
+
+      document.getElementById('nextBtn').addEventListener('click', next);
+      document.getElementById('prevBtn').addEventListener('click', prev);
+      document.getElementById('clickNext').addEventListener('click', next);
+      document.getElementById('clickPrev').addEventListener('click', prev);
+      helpBtn.addEventListener('click', toggleLegend);
+      sectionChips.forEach((chip, chipIndex) => {
+        chip.addEventListener('click', () => {
+          goTo(sections[chipIndex].start - 1);
+        });
+      });
+      legendClose.addEventListener('click', () => {
+        legendOpen = false;
+        legend.classList.remove('open');
+        legend.setAttribute('aria-hidden', 'true');
+      });
+
+      if (!prefersReducedMotion) {
+        window.addEventListener('pointermove', (event) => {
+          const x = event.clientX - 260;
+          const y = event.clientY - 260;
+          spotlight.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        });
+
+        const tiltTargets = Array.from(document.querySelectorAll('.glass, .glass-soft, .code-block, .stat, .decision-card, .avatar, .doc-shell, .warm-block, .ta-card, .scan-qr, .feedback-box'));
+        tiltTargets.forEach((card) => {
+          card.addEventListener('pointermove', (event) => {
+            const parentSlide = card.closest('.slide');
+            if (!parentSlide || !parentSlide.classList.contains('is-active')) return;
+            const rect = card.getBoundingClientRect();
+            const px = (event.clientX - rect.left) / rect.width;
+            const py = (event.clientY - rect.top) / rect.height;
+            const rotateY = (px - 0.5) * 8;
+            const rotateX = (0.5 - py) * 8;
+            card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
+          });
+          card.addEventListener('pointerleave', () => {
+            card.style.transform = '';
+          });
+        });
+      }
+
+      document.addEventListener('keydown', (event) => {
+        const key = event.key;
+
+        if (key === 'ArrowRight' || key === 'PageDown' || key === ' ') {
+          event.preventDefault();
+          next();
+          return;
+        }
+
+        if (key === 'ArrowLeft' || key === 'PageUp') {
+          event.preventDefault();
+          prev();
+          return;
+        }
+
+        if (key === 'Home') {
+          event.preventDefault();
+          goTo(0);
+          return;
+        }
+
+        if (key === 'End') {
+          event.preventDefault();
+          goTo(total - 1);
+          return;
+        }
+
+        if (key.toLowerCase() === 'n') {
+          event.preventDefault();
+          toggleNotes();
+          return;
+        }
+
+        if (key === '?' || (key === '/' && event.shiftKey)) {
+          event.preventDefault();
+          toggleLegend();
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
