@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♠️</text></svg>">
   <title>Setting Up Your Project For Success — cmd-f 2026</title>
   <style>
     :root {
@@ -967,6 +968,32 @@
       box-shadow: 0 0 26px rgba(116, 235, 213, 0.26);
     }
 
+    .asset-frame {
+      position: relative;
+      overflow: hidden;
+      width: var(--asset-width, auto);
+      height: var(--asset-height, auto);
+      min-height: var(--asset-min-height, unset);
+      max-width: var(--asset-max-width, none);
+      max-height: var(--asset-max-height, none);
+      aspect-ratio: var(--asset-aspect, auto);
+    }
+
+    .asset-frame img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: var(--asset-fit, cover);
+      object-position: var(--asset-position, center);
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .asset-frame.has-image img {
+      opacity: 1;
+    }
+
     .scan-qr {
       margin-top: 12px;
       display: grid;
@@ -991,6 +1018,13 @@
         linear-gradient(-45deg, rgba(255, 101, 132, 0.42), rgba(108, 99, 255, 0.42));
       background-size: 12px 12px, 100% 100%;
       box-shadow: 0 10px 20px rgba(98, 77, 156, 0.22);
+    }
+
+    .scan-qr .qr-mini.has-image::before,
+    .scan-qr .qr-mini.has-image::after,
+    .qr.has-image::before,
+    .qr.has-image::after {
+      opacity: 0;
     }
 
     .scan-label {
@@ -1044,6 +1078,10 @@
       letter-spacing: 0.11em;
       text-transform: uppercase;
       font-weight: 700;
+    }
+
+    .photo-placeholder.has-image {
+      color: transparent;
     }
 
     .land-copy {
@@ -1368,6 +1406,168 @@
       cursor: pointer;
     }
 
+    .picker-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 31;
+      background: rgba(130, 164, 196, 0.1);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+
+    .picker-scrim.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .slide-picker {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      bottom: 20px;
+      width: min(410px, calc(100vw - 40px));
+      z-index: 33;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 24px;
+      transform: translateX(24px) scale(0.985);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms ease, transform 260ms ease;
+      overflow: hidden;
+    }
+
+    .slide-picker.open {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .slide-picker-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .slide-picker-label {
+      display: grid;
+      gap: 4px;
+    }
+
+    .slide-picker-label span:first-child {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(65, 91, 135, 0.74);
+      font-weight: 700;
+    }
+
+    .slide-picker-label strong {
+      font-size: 22px;
+      color: rgba(19, 36, 69, 0.95);
+      line-height: 1.05;
+    }
+
+    .slide-picker-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid rgba(156, 176, 216, 0.7);
+      background: rgba(255, 255, 255, 0.76);
+      color: #1f3565;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(69, 96, 143, 0.14);
+    }
+
+    .slide-picker-list {
+      display: grid;
+      gap: 10px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .slide-picker-list::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .slide-picker-list::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: rgba(133, 156, 203, 0.42);
+      border: 2px solid rgba(255, 255, 255, 0.55);
+    }
+
+    .slide-jump {
+      width: 100%;
+      display: grid;
+      gap: 10px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.84);
+      background: linear-gradient(160deg, rgba(255, 251, 240, 0.82), rgba(239, 246, 255, 0.78));
+      text-align: left;
+      color: rgba(19, 36, 69, 0.95);
+      cursor: pointer;
+      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
+      box-shadow: 0 10px 22px rgba(73, 97, 140, 0.12);
+    }
+
+    .slide-jump:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(73, 97, 140, 0.18);
+    }
+
+    .slide-jump.active {
+      border-color: rgba(42, 73, 172, 0.2);
+      background: linear-gradient(135deg, rgba(42, 73, 172, 0.12), rgba(211, 58, 106, 0.1), rgba(255, 247, 223, 0.92));
+      box-shadow: 0 18px 34px rgba(82, 97, 172, 0.2);
+    }
+
+    .slide-jump-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .slide-jump-number {
+      min-width: 42px;
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(150, 170, 212, 0.45);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: rgba(58, 82, 130, 0.86);
+    }
+
+    .slide-jump-section {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(71, 95, 142, 0.72);
+      font-weight: 700;
+    }
+
+    .slide-jump-title {
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 700;
+      color: rgba(19, 36, 69, 0.95);
+    }
+
     .subtle {
       color: rgba(35, 54, 93, 0.76);
       font-size: clamp(16px, 1.5vw, 20px);
@@ -1433,6 +1633,14 @@
         max-width: none;
       }
 
+      .slide-picker {
+        top: 14px;
+        right: 14px;
+        bottom: 14px;
+        left: 14px;
+        width: auto;
+      }
+
       .notes-body {
         font-size: 16px;
       }
@@ -1479,6 +1687,10 @@
       .ui-btn {
         width: 38px;
         height: 38px;
+      }
+
+      .slide-jump-title {
+        font-size: 16px;
       }
     }
 
@@ -1551,7 +1763,7 @@
     <span style="--x:93%; --y:76%; --dur:15.4s; --delay:4.2s; --rot:4deg;">🎩</span>
   </div>
   <div class="section-nav" id="sectionNav" aria-label="Workshop sections">
-    <!-- <span class="section-chip active">🐇 Hook</span> -->
+    <span class="section-chip active">🐇 Hook</span>
     <span class="section-chip">📜 PRD</span>
     <span class="section-chip">🍄 Activity 1</span>
     <span class="section-chip">🫖 User Stories</span>
@@ -1590,26 +1802,27 @@
       <div class="slide-content">
         <div class="label">Your Facilitation Team</div>
         <h2>Meet your workshop lead + TAs</h2>
+        <!-- Adjust image boxes with data-asset-width, data-asset-height, data-asset-min-height, data-asset-aspect, data-asset-fit, and data-asset-position. -->
         <div class="ta-grid">
           <article class="ta-card">
-            <div class="photo-placeholder">Photo Placeholder</div>
+            <div class="photo-placeholder asset-frame" data-asset-src="images/fahim.jpg" data-asset-fit="cover" data-asset-min-height="128px" data-asset-aspect="1 / 1">Photo Placeholder<img alt="Workshop lead photo placeholder"></div>
             <h3>Fahim</h3>
-            <p><strong>Career:</strong> . </p>
+            <p> Salesforce/Microsoft PM | BUCS </p>
           </article>
           <article class="ta-card">
-            <div class="photo-placeholder">Photo Placeholder</div>
+            <div class="photo-placeholder asset-frame" data-asset-src="images/eric.webp" data-asset-fit="cover" data-asset-min-height="128px" data-asset-aspect="1 / 1">Photo Placeholder<img alt="Eric photo placeholder"></div>
             <h3>Eric</h3>
-            <p><strong>Career:</strong> .</p>
+            <p>SAP SWE | BSc. CS </p>
           </article>
           <article class="ta-card">
-            <div class="photo-placeholder">Photo Placeholder</div>
+            <div class="photo-placeholder asset-frame" data-asset-src="images/kashish.webp" data-asset-fit="cover" data-asset-min-height="128px" data-asset-aspect="1 / 1">Photo Placeholder<img alt="Kashish photo placeholder"></div>
             <h3>Kashish</h3>
-            <p><strong>Career:</strong> .</p>
+            <p> Samsung/Korotu SWE | BCS </p>
           </article>
           <article class="ta-card">
-            <div class="photo-placeholder">Photo Placeholder</div>
+            <div class="photo-placeholder asset-frame" data-asset-src="images/kelly.webp" data-asset-fit="cover" data-asset-min-height="128px" data-asset-aspect="1 / 1">Photo Placeholder<img alt="Kelly photo placeholder"></div>
             <h3>Kelly</h3>
-            <p><strong>Career:</strong> .</p>
+            <p> AQI/BCI SW | BSc. CS </p>
           </article>
         </div>
       </div>
@@ -1622,7 +1835,7 @@
           <p>I acknowledge that PRD 101 takes place on the traditional, ancestral, and unceded territory of the wmaekwayam (Musqueam) people, where knowledge has been shared and passed down for generations.</p>
           <p>Just as it has where I'm from! In the Treaty 7 region, comprising of the Blackfoot Confederacy, Tsuut 'ina, and Stoney Nakoda First Nation—also known as Calgary.</p>
           <div class="scan-qr" style="max-width:520px;">
-            <div class="qr-mini" aria-hidden="true"></div>
+            <div class="qr-mini asset-frame" data-asset-src="images/landacknowledgement.png" data-asset-fit="contain" aria-hidden="true"><img alt="Land acknowledgement QR code placeholder"></div>
             <div>
               <p class="scan-label">Land Acknowledgement QR</p>
               <p>Scan to access learning resources and local Nation links.</p>
@@ -1654,7 +1867,7 @@
     <section class="slide" data-index="6">
       <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
         <div class="label">Part 1</div>
-        <h1>What Are We Building?</h1>
+        <h1>Does Anyone Know What a PRD Is?</h1>
         <div class="accent-line"></div>
       </div>
     </section>
@@ -1775,6 +1988,18 @@
     </section>
 
     <section class="slide activity" data-index="13">
+      <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
+        <span class="badge-xl">ACTIVITY 01 — Scan In</span>
+        <h1>Everyone please scan :) </h1>
+        <article class="glass" style="padding:28px; display:grid; gap:16px; justify-items:center; max-width:760px;">
+          <div class="qr asset-frame" data-asset-src="images/menti.png" data-asset-fit="contain" data-asset-width="220px" data-asset-height="220px" aria-label="Activity 1 QR code">
+            <img alt="Activity 1 QR code placeholder">
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide activity" data-index="14">
       <div class="slide-content">
         <span class="badge-xl">ACTIVITY 01 — 3 min</span>
         <h1>Telephone Disaster</h1>
@@ -1782,7 +2007,7 @@
           <p>We gave a team the brief: “Make something social for students.” Here's what they built...</p>
         </article>
         <div class="scan-qr">
-          <div class="qr-mini" aria-hidden="true"></div>
+          <div class="qr-mini asset-frame" data-asset-src="images/menti.png" data-asset-fit="contain" aria-hidden="true"><img alt="Activity 1 QR code placeholder"></div>
           <div>
             <p class="scan-label">Mini Activity QR</p>
             <p>Scan to submit your guess before the reveal.</p>
@@ -1791,7 +2016,7 @@
       </div>
     </section>
 
-    <section class="slide activity" data-index="14">
+    <section class="slide activity" data-index="15">
       <div class="slide-content">
         <div class="label">The Reveal</div>
         <h2 style="color:#7f2039;">Overcomplicated social network for students</h2>
@@ -1822,7 +2047,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="15" style="background:radial-gradient(circle at 12% 18%, rgba(255,101,132,0.28), transparent 38%), radial-gradient(circle at 88% 76%, rgba(184,140,255,0.24), transparent 44%), linear-gradient(155deg, #fff2fa, #f7ecff 48%, #edf4ff 100%);">
+    <section class="slide" data-index="16" style="background:radial-gradient(circle at 12% 18%, rgba(255,101,132,0.28), transparent 38%), radial-gradient(circle at 88% 76%, rgba(184,140,255,0.24), transparent 44%), linear-gradient(155deg, #fff2fa, #f7ecff 48%, #edf4ff 100%);">
       <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
         <div class="label">Part 2</div>
         <h1>Who Are We Building For?</h1>
@@ -1830,7 +2055,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="16">
+    <section class="slide" data-index="17">
       <div class="slide-content">
         <div class="label">What Is A User Story</div>
         <article class="code-block" style="max-width:980px;">
@@ -1842,7 +2067,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="17">
+    <section class="slide" data-index="18">
       <div class="slide-content">
         <div class="label">Good vs Bad</div>
         <div class="grid-2">
@@ -1858,7 +2083,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="18">
+    <section class="slide" data-index="19">
       <div class="slide-content">
         <div class="label">Pomodoro Examples</div>
         <h2>4 user stories from the app</h2>
@@ -1871,7 +2096,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="19">
+    <section class="slide" data-index="20">
       <div class="slide-content">
         <div class="label">User Stories → Features</div>
         <h2>One story maps across the team</h2>
@@ -1895,7 +2120,7 @@
       </div>
     </section>
 
-    <section class="slide activity" data-index="20">
+    <section class="slide activity" data-index="21">
       <div class="slide-content">
         <span class="badge-xl">ACTIVITY 02 — 5 min</span>
         <h1>Fix the User Story</h1>
@@ -1905,7 +2130,7 @@
         </article>
         <div class="countdown-ring"><span>90s</span></div>
         <div class="scan-qr">
-          <div class="qr-mini" aria-hidden="true"></div>
+          <div class="qr-mini asset-frame" data-asset-src="images/menti.png" data-asset-fit="contain" aria-hidden="true"><img alt="Activity 2 QR code placeholder"></div>
           <div>
             <p class="scan-label">Mini Activity QR</p>
             <p>Scan to drop your rewritten story with your pair.</p>
@@ -1914,7 +2139,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="21">
+    <section class="slide" data-index="22">
       <div class="slide-content">
         <div class="grid-2" style="align-items:center;">
           <div style="display:grid; gap:12px;">
@@ -1929,7 +2154,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="22">
+    <section class="slide" data-index="23">
       <div class="slide-content">
         <div class="label">Scope Creep</div>
         <div class="grid-2">
@@ -1943,7 +2168,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="23">
+    <section class="slide" data-index="24">
       <div class="slide-content">
         <div class="label">MoSCoW Method</div>
         <h2>Must / Should / Could / Won’t</h2>
@@ -1956,7 +2181,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="24">
+    <section class="slide" data-index="25">
       <div class="slide-content">
         <div class="label">Pomodoro Scope</div>
         <div class="matrix">
@@ -1982,11 +2207,31 @@
       </div>
     </section>
 
-    <section class="slide activity" data-index="25">
+    <section class="slide activity" data-index="26">
+      <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
+        <span class="badge-xl">ACTIVITY 03 — Warm Up</span>
+        <h1>What feels like a true must-have for our Pomodoro app?</h1>
+        <article class="glass" style="padding:28px; max-width:900px; display:grid; gap:14px; justify-items:center;">
+          <p style="font-size:24px; max-width:720px;">Before we vote on the feature list, call out the one thing you think this app absolutely needs in order to be worth building.</p>
+          <div class="grid-2" style="width:100%; max-width:760px;">
+            <article class="glass-soft" style="padding:18px;">
+              <p class="tiny">Examples people might say</p>
+              <p>Timer controls, reward system, notifications, saved settings</p>
+            </article>
+            <article class="glass-soft" style="padding:18px;">
+              <p class="tiny">Prompt</p>
+              <p>If we shipped without this feature, would the product still make sense?</p>
+            </article>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide activity" data-index="27">
       <div class="slide-content">
         <span class="badge-xl">ACTIVITY 03 — 8 min</span>
         <h1>Feature Court</h1>
-        <p>Audience votes: Must / Should / Cut</p>
+        <p>Audience votes by show of hands: Must / Should / Cut</p>
         <div class="vote-list">
           <div class="vote-item"><p>(1) Fruit gallery</p><div class="vote-tags"><span>Must</span><span>Should</span><span>Cut</span></div></div>
           <div class="vote-item"><p>(2) Sound notification</p><div class="vote-tags"><span>Must</span><span>Should</span><span>Cut</span></div></div>
@@ -1994,17 +2239,10 @@
           <div class="vote-item"><p>(4) Custom timer length</p><div class="vote-tags"><span>Must</span><span>Should</span><span>Cut</span></div></div>
           <div class="vote-item"><p>(5) Todo list integration</p><div class="vote-tags"><span>Must</span><span>Should</span><span>Cut</span></div></div>
         </div>
-        <div class="scan-qr">
-          <div class="qr-mini" aria-hidden="true"></div>
-          <div>
-            <p class="scan-label">Mini Activity QR</p>
-            <p>Scan to vote live feature-by-feature.</p>
-          </div>
-        </div>
       </div>
     </section>
 
-    <section class="slide" data-index="26">
+    <section class="slide" data-index="28">
       <div class="slide-content">
         <div class="label">Feature Court Reveal</div>
         <h2>What the team decided + why</h2>
@@ -2026,14 +2264,14 @@
       </div>
     </section>
 
-    <section class="slide" data-index="27">
+    <section class="slide" data-index="29">
       <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
         <h1>Every feature you add is a tradeoff.</h1>
         <h2 style="color:#146944;">Scope down to ship something real.</h2>
       </div>
     </section>
 
-    <section class="slide" data-index="28">
+    <section class="slide" data-index="30">
       <div class="slide-content">
         <div class="label">Part 4</div>
         <h1>Why API Alignment Matters for Your PRD</h1>
@@ -2041,7 +2279,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="29">
+    <section class="slide" data-index="31">
       <div class="slide-content">
         <div class="label">Connection Flow</div>
         <h2>PRD line → User story → API handshake → Working feature</h2>
@@ -2063,7 +2301,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="30">
+    <section class="slide" data-index="32">
       <div class="slide-content">
         <div class="label">What Goes In The PRD</div>
         <h2>The 4-line API handshake your team needs</h2>
@@ -2089,7 +2327,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="31">
+    <section class="slide" data-index="33">
       <div class="slide-content">
         <div class="label">PRD-First Example</div>
         <h2>Pomodoro: from requirement to contract</h2>
@@ -2116,7 +2354,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="32">
+    <section class="slide" data-index="34">
       <div class="slide-content">
         <div class="label">Build-Readiness Check</div>
         <h2>Before coding, confirm these 5 things</h2>
@@ -2135,7 +2373,7 @@
       </div>
     </section>
 
-    <section class="slide activity" data-index="33">
+    <section class="slide activity" data-index="35">
       <div class="slide-content">
         <span class="badge-xl">ACTIVITY 04 — 5 min</span>
         <h1>PRD Pressure Test</h1>
@@ -2154,7 +2392,7 @@
         </div>
         <p class="subtle">Make it specific enough that frontend + backend + design can all build the same thing.</p>
         <div class="scan-qr">
-          <div class="qr-mini" aria-hidden="true"></div>
+          <div class="qr-mini asset-frame" data-asset-src="images/menti.png" data-asset-fit="contain" aria-hidden="true"><img alt="Activity 4 QR code placeholder"></div>
           <div>
             <p class="scan-label">Mini Activity QR</p>
             <p>Scan to submit your pressure-test rewrite.</p>
@@ -2163,7 +2401,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="34">
+    <section class="slide" data-index="36">
       <div class="slide-content">
         <div class="label">Debrief + Lesson</div>
         <h2>Clear flow beats clever chaos.</h2>
@@ -2183,7 +2421,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="35">
+    <section class="slide" data-index="37">
       <div class="slide-content">
         <div class="label">Part 5</div>
         <h1>Your PRD in Practice</h1>
@@ -2191,7 +2429,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="36">
+    <section class="slide" data-index="38">
       <div class="slide-content">
         <div class="label">The Flow</div>
         <h2>User Research → PRD → User Stories → Scope → API Spec → Build</h2>
@@ -2211,7 +2449,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="37">
+    <section class="slide" data-index="39">
       <div class="slide-content">
         <div class="label">cmd-f Context</div>
         <h2>At cmd-f, you have 24 hours.</h2>
@@ -2223,18 +2461,18 @@
       </div>
     </section>
 
-    <section class="slide" data-index="38">
+    <section class="slide" data-index="40">
       <div class="slide-content">
         <div class="label">Template Handoff</div>
         <article class="glass" style="padding:26px; display:grid; gap:10px; justify-items:center; text-align:center; max-width:860px; margin:0 auto;">
           <h2>We've made you a PRD template. Use it. Your future self will thank you.</h2>
-          <div class="qr" aria-label="QR code placeholder"></div>
-          <p class="subtle">Template link placeholder: <code>https://cmd-f.example/prd-template</code></p>
+          <div class="qr asset-frame" data-asset-src="images/qr-template.png" data-asset-fit="contain" data-asset-width="220px" data-asset-height="220px" aria-label="PRD template QR code"><img alt="PRD template QR code placeholder"></div>
+          <p class="subtle">Scan this to open the PRD template and keep it handy for your team.</p>
         </article>
       </div>
     </section>
 
-    <section class="slide" data-index="39">
+    <section class="slide" data-index="41">
       <div class="slide-content">
         <div class="label">Key Takeaways</div>
         <div class="grid-3">
@@ -2254,7 +2492,7 @@
       </div>
     </section>
 
-    <section class="slide" data-index="40" style="background:radial-gradient(circle at 20% 20%, rgba(116,235,213,0.35), transparent 42%), radial-gradient(circle at 80% 75%, rgba(255,101,132,0.3), transparent 44%), linear-gradient(145deg, #f2f8ff, #f0ecff 44%, #fff0f5 100%);">
+    <section class="slide" data-index="42" style="background:radial-gradient(circle at 20% 20%, rgba(116,235,213,0.35), transparent 42%), radial-gradient(circle at 80% 75%, rgba(255,101,132,0.3), transparent 44%), linear-gradient(145deg, #f2f8ff, #f0ecff 44%, #fff0f5 100%);">
       <div class="particle-wrap" aria-hidden="true">
         <span class="particle" style="--left:8%; --delay:0s;"></span>
         <span class="particle" style="--left:20%; --delay:1.3s;"></span>
@@ -2270,7 +2508,7 @@
         <p class="subtle">Thank you • Next workshop teaser: Git + Figma track deep dive</p>
         <article class="feedback-box">
           <p class="scan-label">Feedback QR</p>
-          <div class="qr" style="width:132px; height:132px; margin: 0;"></div>
+          <div class="qr asset-frame" data-asset-src="images/feedback.png" data-asset-fit="contain" style="width:132px; height:132px; margin: 0;"><img alt="Feedback QR code placeholder"></div>
           <p class="subtle">Scan to share workshop feedback and get next-session resources.</p>
         </article>
       </div>
@@ -2283,9 +2521,10 @@
 
   <div class="ui">
     <button class="ui-btn" id="prevBtn" aria-label="Previous slide">‹</button>
-    <div class="counter" id="counter">1 / 40</div>
+    <div class="counter" id="counter">1 / 42</div>
     <div class="section-badge" id="sectionBadge">Hook</div>
     <button class="ui-btn" id="nextBtn" aria-label="Next slide">›</button>
+    <button class="ui-btn" id="pickerBtn" aria-label="Open slide navigator" aria-expanded="false">≡</button>
     <button class="ui-btn" id="helpBtn" aria-label="Keyboard shortcuts">?</button>
   </div>
 
@@ -2296,9 +2535,22 @@
       <li><span>Next slide</span><kbd>→</kbd></li>
       <li><span>Previous slide</span><kbd>←</kbd></li>
       <li><span>Toggle speaker notes</span><kbd>N</kbd></li>
+      <li><span>Open slide navigator</span><kbd>G</kbd></li>
       <li><span>Toggle this legend</span><kbd>?</kbd></li>
       <li><span>Jump to start / end</span><kbd>Home / End</kbd></li>
     </ul>
+  </aside>
+
+  <div class="picker-scrim" id="pickerScrim" aria-hidden="true"></div>
+  <aside class="slide-picker glass" id="slidePicker" aria-hidden="true">
+    <div class="slide-picker-head">
+      <div class="slide-picker-label">
+        <span>Slide Navigator</span>
+        <strong>Jump To Any Slide</strong>
+      </div>
+      <button class="slide-picker-close" id="pickerClose" aria-label="Close slide navigator">×</button>
+    </div>
+    <div class="slide-picker-list" id="slidePickerList"></div>
   </aside>
 
   <aside class="notes-drawer" id="notesDrawer" aria-live="polite">
@@ -2320,6 +2572,11 @@
       const legend = document.getElementById('legend');
       const helpBtn = document.getElementById('helpBtn');
       const legendClose = document.getElementById('legendClose');
+      const picker = document.getElementById('slidePicker');
+      const pickerBtn = document.getElementById('pickerBtn');
+      const pickerClose = document.getElementById('pickerClose');
+      const pickerList = document.getElementById('slidePickerList');
+      const pickerScrim = document.getElementById('pickerScrim');
       const sectionBadge = document.getElementById('sectionBadge');
       const sectionChips = Array.from(document.querySelectorAll('.section-chip'));
       const progressFill = document.getElementById('progressFill');
@@ -2347,13 +2604,32 @@
       const sections = [
         { name: 'Hook', start: 1, end: 5 },
         { name: 'PRD', start: 6, end: 12 },
-        { name: 'Activity 1', start: 13, end: 14 },
-        { name: 'User Stories', start: 15, end: 20 },
-        { name: 'Scope', start: 21, end: 27 },
-        { name: 'API', start: 28, end: 31 },
-        { name: 'Practice', start: 32, end: 38 },
-        { name: 'Close', start: 39, end: 40 }
+        { name: 'Activity 1', start: 13, end: 15 },
+        { name: 'User Stories', start: 16, end: 21 },
+        { name: 'Scope', start: 22, end: 29 },
+        { name: 'API', start: 30, end: 33 },
+        { name: 'Practice', start: 34, end: 40 },
+        { name: 'Close', start: 41, end: 42 }
       ];
+
+      const titleSelectors = ['h1', 'h2', 'h3', '.hero-title'];
+      const getSectionName = (slideNumber) => sections.find((section) => slideNumber >= section.start && slideNumber <= section.end)?.name || 'Workshop';
+      const getSlideTitle = (slide, slideNumber) => {
+        for (const selector of titleSelectors) {
+          const match = slide.querySelector(selector);
+          if (match && match.textContent.trim()) return match.textContent.trim();
+        }
+        const label = slide.querySelector('.label');
+        if (label && label.textContent.trim()) return label.textContent.trim();
+        return `Slide ${slideNumber}`;
+      };
+
+      const slideDirectory = slides.map((slide, slideIndex) => ({
+        index: slideIndex,
+        number: slideIndex + 1,
+        title: getSlideTitle(slide, slideIndex + 1),
+        section: getSectionName(slideIndex + 1)
+      }));
 
       const speakerNotes = [
         "Hello hello everyone. Quick story: I watched a team sprint for 24 hours and then realize they built the wrong thing. We are not doing that tonight.",
@@ -2368,6 +2644,7 @@
         "We will use one running example all workshop: a Pomodoro app with collectible fruit rewards.",
         "This is the anatomy. Overview, users, features, scope, and API handshake. That sequence keeps teams synced.",
         "Here is a lightweight template you can fill in fast. Twenty minutes here saves hours later.",
+        "Before we start activity one, everyone take out your phone and scan this now. I want the whole room in before we move on.",
         "Activity one: Telephone Disaster. Scan the QR and submit your guess before I reveal what the team built.",
         "And here is the reveal: beautiful chaos, zero focus. This is what happens when the brief is vague.",
         "Part 2: who are we building for? We shift from product ambition to user reality.",
@@ -2380,7 +2657,8 @@
         "Scope creep sounds small in the moment, but it quietly kills momentum and quality.",
         "MoSCoW gives us four lanes: Must, Should, Could, and Won't this time. 'Could' is nice-to-have, not mission-critical.",
         "Here are our Pomodoro scope calls. Notice how much power comes from clear cuts.",
-        "Feature Court time. Fast votes, strong opinions, and then we lock answers through the QR.",
+        "Before Feature Court, I want to hear your instincts. What is the one feature this Pomodoro app absolutely cannot ship without?",
+        "Feature Court time. We are doing this by show of hands, so trust your gut and commit to the vote.",
         "Here is what the team chose. You might disagree with one, and that is good conversation.",
         "Core lesson: every feature is a tradeoff. If everything is priority, nothing is priority.",
         "Part 4 is short and practical: why API clarity matters for your PRD.",
@@ -2401,6 +2679,7 @@
       let index = 0;
       let notesOpen = false;
       let legendOpen = false;
+      let pickerOpen = false;
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       const clampIndex = (value) => Math.max(0, Math.min(total - 1, value));
@@ -2415,6 +2694,49 @@
         const trio = stickerPool[i % stickerPool.length];
         strip.innerHTML = trio.map((icon, iconIndex) => `<span style="--e:${iconIndex};">${icon}</span>`).join('');
         slide.appendChild(strip);
+      });
+
+      pickerList.innerHTML = slideDirectory.map((slide) => `
+        <button class="slide-jump" type="button" data-slide-index="${slide.index}">
+          <div class="slide-jump-top">
+            <span class="slide-jump-number">${String(slide.number).padStart(2, '0')}</span>
+            <span class="slide-jump-section">${slide.section}</span>
+          </div>
+          <div class="slide-jump-title">${slide.title}</div>
+        </button>
+      `).join('');
+
+      const slideJumpButtons = Array.from(pickerList.querySelectorAll('.slide-jump'));
+
+      const assetFrames = Array.from(document.querySelectorAll('[data-asset-src]'));
+      assetFrames.forEach((frame) => {
+        const img = frame.querySelector('img');
+        const src = frame.dataset.assetSrc;
+        if (!img || !src) return;
+        const assetStyleMap = {
+          assetWidth: '--asset-width',
+          assetHeight: '--asset-height',
+          assetMinHeight: '--asset-min-height',
+          assetMaxWidth: '--asset-max-width',
+          assetMaxHeight: '--asset-max-height',
+          assetAspect: '--asset-aspect',
+          assetFit: '--asset-fit',
+          assetPosition: '--asset-position'
+        };
+        Object.entries(assetStyleMap).forEach(([dataKey, cssVar]) => {
+          const value = frame.dataset[dataKey];
+          if (value) {
+            frame.style.setProperty(cssVar, value);
+          }
+        });
+        img.addEventListener('load', () => {
+          frame.classList.add('has-image');
+        });
+        img.addEventListener('error', () => {
+          frame.classList.remove('has-image');
+          img.removeAttribute('src');
+        }, { once: true });
+        img.src = src;
       });
 
       const render = () => {
@@ -2436,6 +2758,13 @@
             chip.classList.toggle('active', chipIndex === sectionIndex);
           });
         }
+        slideJumpButtons.forEach((button) => {
+          const isActive = Number(button.dataset.slideIndex) === index;
+          button.classList.toggle('active', isActive);
+          if (isActive && pickerOpen) {
+            button.scrollIntoView({ block: 'nearest' });
+          }
+        });
       };
 
       const goTo = (nextIndex) => {
@@ -2456,8 +2785,39 @@
         notesDrawer.classList.toggle('open', notesOpen);
       };
 
+      const closeLegend = () => {
+        legendOpen = false;
+        legend.classList.remove('open');
+        legend.setAttribute('aria-hidden', 'true');
+      };
+
+      const closePicker = () => {
+        pickerOpen = false;
+        picker.classList.remove('open');
+        pickerScrim.classList.remove('open');
+        picker.setAttribute('aria-hidden', 'true');
+        pickerScrim.setAttribute('aria-hidden', 'true');
+        pickerBtn.setAttribute('aria-expanded', 'false');
+      };
+
+      const togglePicker = () => {
+        pickerOpen = !pickerOpen;
+        if (pickerOpen) {
+          closeLegend();
+        }
+        picker.classList.toggle('open', pickerOpen);
+        pickerScrim.classList.toggle('open', pickerOpen);
+        picker.setAttribute('aria-hidden', String(!pickerOpen));
+        pickerScrim.setAttribute('aria-hidden', String(!pickerOpen));
+        pickerBtn.setAttribute('aria-expanded', String(pickerOpen));
+        if (pickerOpen) render();
+      };
+
       const toggleLegend = () => {
         legendOpen = !legendOpen;
+        if (legendOpen) {
+          closePicker();
+        }
         legend.classList.toggle('open', legendOpen);
         legend.setAttribute('aria-hidden', String(!legendOpen));
       };
@@ -2466,17 +2826,23 @@
       document.getElementById('prevBtn').addEventListener('click', prev);
       document.getElementById('clickNext').addEventListener('click', next);
       document.getElementById('clickPrev').addEventListener('click', prev);
+      pickerBtn.addEventListener('click', togglePicker);
       helpBtn.addEventListener('click', toggleLegend);
       sectionChips.forEach((chip, chipIndex) => {
         chip.addEventListener('click', () => {
+          closePicker();
           goTo(sections[chipIndex].start - 1);
         });
       });
-      legendClose.addEventListener('click', () => {
-        legendOpen = false;
-        legend.classList.remove('open');
-        legend.setAttribute('aria-hidden', 'true');
+      slideJumpButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          closePicker();
+          goTo(Number(button.dataset.slideIndex));
+        });
       });
+      legendClose.addEventListener('click', closeLegend);
+      pickerClose.addEventListener('click', closePicker);
+      pickerScrim.addEventListener('click', closePicker);
 
       if (!prefersReducedMotion) {
         window.addEventListener('pointermove', (event) => {
@@ -2536,9 +2902,25 @@
           return;
         }
 
+        if (key.toLowerCase() === 'g') {
+          event.preventDefault();
+          togglePicker();
+          return;
+        }
+
         if (key === '?' || (key === '/' && event.shiftKey)) {
           event.preventDefault();
           toggleLegend();
+          return;
+        }
+
+        if (key === 'Escape') {
+          if (pickerOpen) {
+            closePicker();
+          }
+          if (legendOpen) {
+            closeLegend();
+          }
         }
       });
 
