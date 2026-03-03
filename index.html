@@ -755,25 +755,49 @@
       min-height: 210px;
       border-radius: 22px;
       overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      background:
+        radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.82), transparent 26%),
+        radial-gradient(circle at 78% 76%, rgba(103, 210, 222, 0.2), transparent 24%),
+        linear-gradient(145deg, rgba(255, 247, 223, 0.9), rgba(255, 238, 244, 0.88) 46%, rgba(239, 246, 255, 0.92));
+      box-shadow: 0 18px 34px rgba(76, 97, 144, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.7);
     }
 
     .spiral::before {
       content: "";
       position: absolute;
-      inset: 5% 16%;
-      background: repeating-radial-gradient(circle at center, rgba(255, 101, 132, 0.28) 0 2px, transparent 2px 15px);
-      opacity: 0.9;
-      transform: rotate(12deg);
+      inset: 8% 14%;
+      border-radius: 50%;
+      background:
+        repeating-radial-gradient(circle at center, rgba(255, 101, 132, 0.66) 0 4px, rgba(255, 101, 132, 0.08) 4px 18px),
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.22), transparent 56%);
+      mask: radial-gradient(circle at center, transparent 0 10px, #000 12px 100%);
+      -webkit-mask: radial-gradient(circle at center, transparent 0 10px, #000 12px 100%);
+      opacity: 0.95;
+      transform: rotate(12deg) scale(1.02);
+      filter: drop-shadow(0 0 18px rgba(255, 101, 132, 0.22));
+    }
+
+    .spiral .spiral-arrow {
+      position: absolute;
+      right: 18%;
+      top: 20%;
+      font-size: clamp(48px, 7vw, 84px);
+      color: rgba(211, 58, 106, 0.9);
+      text-shadow: 0 0 20px rgba(255, 101, 132, 0.28);
+      transform: rotate(16deg);
+      animation: bob 3s ease-in-out infinite;
     }
 
     .spiral::after {
       content: "We just need one more feature...";
       position: absolute;
-      inset: auto 20px 20px 20px;
+      inset: auto 20px 18px 20px;
       font-size: clamp(20px, 2.2vw, 30px);
       color: rgba(111, 31, 58, 0.86);
       text-align: center;
       text-shadow: 0 0 18px rgba(255, 101, 132, 0.2);
+      font-weight: 760;
     }
 
     .tier {
@@ -2163,7 +2187,7 @@
             <p>Scope creep is when “small additions” gradually turn a focused project into an impossible one.</p>
             <p>Relatable example: a timer app slowly becomes a social network, task manager, and analytics dashboard.</p>
           </article>
-          <article class="glass spiral"></article>
+          <article class="glass spiral"><span class="spiral-arrow" aria-hidden="true">↻</span></article>
         </div>
       </div>
     </section>
@@ -2194,8 +2218,24 @@
               <li>✅ Basic settings save</li>
             </ul>
           </article>
+          <article class="glass" style="padding:22px; box-shadow: 0 12px 30px rgba(243, 182, 95, 0.22); border-color: rgba(243, 182, 95, 0.35);">
+            <h3>Should Have</h3>
+            <ul>
+              <li>• Fruit gallery</li>
+              <li>• Custom timer length</li>
+              <li>• Lightweight settings page</li>
+            </ul>
+          </article>
+          <article class="glass" style="padding:22px; box-shadow: 0 12px 30px rgba(103, 210, 222, 0.2); border-color: rgba(103, 210, 222, 0.34);">
+            <h3>Could Have</h3>
+            <ul>
+              <li>• Session streaks</li>
+              <li>• Reward rarity animations</li>
+              <li>• Theme personalization</li>
+            </ul>
+          </article>
           <article class="glass x-glow" style="padding:22px;">
-            <h3>Cut List</h3>
+            <h3>Won't Have This Time</h3>
             <ul>
               <li>~~Social feed~~</li>
               <li>~~NFT badges~~</li>
@@ -2210,10 +2250,10 @@
     <section class="slide activity" data-index="26">
       <div class="slide-content" style="justify-items:center; text-align:center; align-content:center;">
         <span class="badge-xl">ACTIVITY 03 — Warm Up</span>
-        <h1>What feels like a true must-have for our Pomodoro app?</h1>
+        <h1>What feels like a must-have for our Pomodoro app?</h1>
         <article class="glass" style="padding:28px; max-width:900px; display:grid; gap:14px; justify-items:center;">
-          <p style="font-size:24px; max-width:720px;">Before we vote on the feature list, call out the one thing you think this app absolutely needs in order to be worth building.</p>
-          <div class="grid-2" style="width:100%; max-width:760px;">
+          <p style="font-size:24px; max-width:720px;">If we shipped without this feature, would the product still make sense?</p>
+          <!-- <div class="grid-2" style="width:100%; max-width:760px;">
             <article class="glass-soft" style="padding:18px;">
               <p class="tiny">Examples people might say</p>
               <p>Timer controls, reward system, notifications, saved settings</p>
@@ -2222,7 +2262,7 @@
               <p class="tiny">Prompt</p>
               <p>If we shipped without this feature, would the product still make sense?</p>
             </article>
-          </div>
+          </div> -->
         </article>
       </div>
     </section>
@@ -2509,7 +2549,7 @@
         <article class="feedback-box">
           <p class="scan-label">Feedback QR</p>
           <div class="qr asset-frame" data-asset-src="images/feedback.png" data-asset-fit="contain" style="width:132px; height:132px; margin: 0;"><img alt="Feedback QR code placeholder"></div>
-          <p class="subtle">Scan to share workshop feedback and get next-session resources.</p>
+          <p class="subtle">Scan to share workshop feedback :)</p>
         </article>
       </div>
     </section>
